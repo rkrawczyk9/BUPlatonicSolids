@@ -6,6 +6,8 @@ Hi Platonics, this is Robert. GreedyCoverer is what I've been working on, it's a
 
 It returns the covering set.
 
+Currently it is returning too many vertices in the covering set, not sure why, that is something I will be looking at.
+
 I made it in PyCharm, a nice python editing tool, so that is what the venv folder is, but the .py file(s) should run just fine on their own anywhere.
 
 I haven't split things into different files at all, that might be helpful later on to read it easier...
