@@ -2,20 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : MonoBehaviour
+public class Node : IDeletable
 {
     public List<GameObject> connectedNodes = new List<GameObject>();
     public List<GameObject> connectedEdges = new List<GameObject>();
     public GameObject edgePrefab;
-
-    private void Start()
-    {
-        // destroy if no linked nodes
-        if(connectedNodes.Count == 0)
-        {
-            //Destroy(this);
-        }
-    }
 
     public bool SetEdges()
     {
@@ -49,6 +40,10 @@ public class Node : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Add node to connect to
+    /// </summary>
+    /// <param name="newNode"></param>
     public void AddNode(GameObject newNode)
     {
         if(newNode != this.gameObject && !connectedNodes.Contains(newNode))
@@ -57,15 +52,42 @@ public class Node : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if the passed node has this node
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
     public bool HasNode(GameObject node)
     {
         return connectedNodes.Contains(node);
     }
 
+    /// <summary>
+    /// Add a new edge to its list
+    /// </summary>
+    /// <param name="newEdge"></param>
     public void AddEdge(GameObject newEdge)
     {
         connectedEdges.Add(newEdge);
     }
 
+
+    /// <summary>
+    /// Delete this node and its references
+    /// </summary>
+    public override void Delete()
+    {
+        GameObject[] edges = connectedEdges.ToArray();
+
+
+        for(int i = 0; i < edges.Length; i++)
+        {
+            edges[i].GetComponent<EdgeScript>().Delete();
+        }
+
+        Debug.Log("Calling self delete");
+        // Delete this node
+        Destroy(this.gameObject);
+    }
     
 }

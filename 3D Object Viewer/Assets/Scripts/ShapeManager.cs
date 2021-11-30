@@ -7,9 +7,7 @@ using System.IO;
 public class ShapeManager : MonoBehaviour
 {
     [SerializeField] List<GameObject> allNodes = new List<GameObject>();
-    public string matrix;
-
-    public Text matrixText;
+    
 
     void Start()
     {
@@ -33,57 +31,57 @@ public class ShapeManager : MonoBehaviour
             Debug.Log("Setting node " + node.name);
             node.GetComponent<Node>().SetEdges();
         }
-        GenerateAdjacencyMatrix();
+        //GenerateAdjacencyMatrix();
     }
     
-    private void GenerateAdjacencyMatrix()
-    {
-        matrix += "\t";
+    //private void GenerateAdjacencyMatrix()
+    //{
+    //    matrix += "\t";
 
-        foreach (GameObject namineNode in allNodes)
-        {
-            matrix += namineNode.name + ":\t";
-        }
+    //    foreach (GameObject namineNode in allNodes)
+    //    {
+    //        matrix += namineNode.name + ":\t";
+    //    }
 
-        matrix += "\n";
+    //    matrix += "\n";
 
-        foreach (GameObject rowNode in allNodes)
-        {
-            matrix += rowNode.name + ":\t";
+    //    foreach (GameObject rowNode in allNodes)
+    //    {
+    //        matrix += rowNode.name + ":\t";
 
-            foreach(GameObject columnNode in allNodes)
-            {
-                if(rowNode.GetComponent<Node>().HasNode(columnNode))
-                {
-                    matrix += "1";
-                }
-                else
-                {
-                    matrix += "0";
-                }
-                matrix += "\t";
-            }
-            matrix += "\n";
-        }
+    //        foreach(GameObject columnNode in allNodes)
+    //        {
+    //            if(rowNode.GetComponent<Node>().HasNode(columnNode))
+    //            {
+    //                matrix += "1";
+    //            }
+    //            else
+    //            {
+    //                matrix += "0";
+    //            }
+    //            matrix += "\t";
+    //        }
+    //        matrix += "\n";
+    //    }
 
-        matrixText.text = matrix;
-    }
+    //    matrixText.text = matrix;
+    //}
 
 
-    public void ExportMatrix()
-    {
-        string path = Application.dataPath + "/Matrix.txt";
+    //public void ExportMatrix()
+    //{
+    //    string path = Application.dataPath + "/Matrix.txt";
 
-        if(!File.Exists(path))
-        {
-            File.WriteAllText(path, matrix);
-        }
-        else
-        {
-            File.Delete(path);
-            File.WriteAllText(path, matrix);
-        }
+    //    if(!File.Exists(path))
+    //    {
+    //        File.WriteAllText(path, matrix);
+    //    }
+    //    else
+    //    {
+    //        File.Delete(path);
+    //        File.WriteAllText(path, matrix);
+    //    }
 
-        Debug.Log("New Matrix Saved!");
-    }
+    //    Debug.Log("New Matrix Saved!");
+    //}
 }

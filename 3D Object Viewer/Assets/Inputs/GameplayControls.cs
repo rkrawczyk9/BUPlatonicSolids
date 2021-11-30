@@ -65,6 +65,38 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MousePos"",
+                    ""type"": ""Value"",
+                    ""id"": ""94062200-bab6-47ee-8858-f8ed2ac132d1"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""4a33723a-2618-49be-abd8-d1f760b3505a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Link"",
+                    ""type"": ""Button"",
+                    ""id"": ""24d3f253-a6f7-441a-b15b-c24a779604c0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Delete"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""20f83a29-6998-4f16-a0af-fa36b9b1c36d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -285,6 +317,50 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cee4acaa-5470-4b04-986c-0af1572252c7"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e74a9957-bbaa-4962-9e19-3c9f8d0799e8"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8d6b0bf9-cbdc-415b-acdb-ccc4d4bd4261"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Link"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1dd31346-7afd-445d-85f8-60a94819568e"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Delete"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -868,6 +944,10 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         m_Player_Tilt = m_Player.FindAction("Tilt", throwIfNotFound: true);
         m_Player_Zoom = m_Player.FindAction("Zoom", throwIfNotFound: true);
         m_Player_Select = m_Player.FindAction("Select", throwIfNotFound: true);
+        m_Player_MousePos = m_Player.FindAction("MousePos", throwIfNotFound: true);
+        m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
+        m_Player_Link = m_Player.FindAction("Link", throwIfNotFound: true);
+        m_Player_Delete = m_Player.FindAction("Delete", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -935,6 +1015,10 @@ public class @GameplayControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Tilt;
     private readonly InputAction m_Player_Zoom;
     private readonly InputAction m_Player_Select;
+    private readonly InputAction m_Player_MousePos;
+    private readonly InputAction m_Player_Shift;
+    private readonly InputAction m_Player_Link;
+    private readonly InputAction m_Player_Delete;
     public struct PlayerActions
     {
         private @GameplayControls m_Wrapper;
@@ -945,6 +1029,10 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         public InputAction @Tilt => m_Wrapper.m_Player_Tilt;
         public InputAction @Zoom => m_Wrapper.m_Player_Zoom;
         public InputAction @Select => m_Wrapper.m_Player_Select;
+        public InputAction @MousePos => m_Wrapper.m_Player_MousePos;
+        public InputAction @Shift => m_Wrapper.m_Player_Shift;
+        public InputAction @Link => m_Wrapper.m_Player_Link;
+        public InputAction @Delete => m_Wrapper.m_Player_Delete;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -972,6 +1060,18 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Select.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSelect;
                 @Select.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSelect;
                 @Select.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSelect;
+                @MousePos.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePos;
+                @MousePos.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePos;
+                @MousePos.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePos;
+                @Shift.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @Shift.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @Shift.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @Link.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLink;
+                @Link.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLink;
+                @Link.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLink;
+                @Delete.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDelete;
+                @Delete.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDelete;
+                @Delete.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDelete;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -994,6 +1094,18 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Select.started += instance.OnSelect;
                 @Select.performed += instance.OnSelect;
                 @Select.canceled += instance.OnSelect;
+                @MousePos.started += instance.OnMousePos;
+                @MousePos.performed += instance.OnMousePos;
+                @MousePos.canceled += instance.OnMousePos;
+                @Shift.started += instance.OnShift;
+                @Shift.performed += instance.OnShift;
+                @Shift.canceled += instance.OnShift;
+                @Link.started += instance.OnLink;
+                @Link.performed += instance.OnLink;
+                @Link.canceled += instance.OnLink;
+                @Delete.started += instance.OnDelete;
+                @Delete.performed += instance.OnDelete;
+                @Delete.canceled += instance.OnDelete;
             }
         }
     }
@@ -1156,6 +1268,10 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         void OnTilt(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+        void OnMousePos(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
+        void OnLink(InputAction.CallbackContext context);
+        void OnDelete(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

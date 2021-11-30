@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EdgeScript : MonoBehaviour
+public class EdgeScript : IDeletable
 {
     private GameObject[] nodes = new GameObject[2];
 
@@ -61,5 +61,19 @@ public class EdgeScript : MonoBehaviour
 
         // Stretch the box to replicate the line
         transform.localScale = new Vector3(.2f, .2f, Mathf.Abs(Vector3.Distance(nodes[0].transform.position, nodes[1].transform.position)));
+    }
+
+    public override void Delete()
+    {
+        // Remove left node's references to other node and edge
+        nodes[0].GetComponent<Node>().connectedEdges.Remove(this.gameObject);
+        nodes[0].GetComponent<Node>().connectedNodes.Remove(nodes[1]);
+
+        // Remove right node's references to other node and edge
+        nodes[1].GetComponent<Node>().connectedEdges.Remove(this.gameObject);
+        nodes[1].GetComponent<Node>().connectedNodes.Remove(nodes[0]);
+
+        // Destroy
+        Destroy(this.gameObject);
     }
 }
