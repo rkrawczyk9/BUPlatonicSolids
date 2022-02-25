@@ -7,6 +7,7 @@ public class Node : IDeletable
     public List<GameObject> connectedNodes = new List<GameObject>();
     public List<GameObject> connectedEdges = new List<GameObject>();
     public GameObject edgePrefab;
+    public uint id;
 
     public bool SetEdges()
     {

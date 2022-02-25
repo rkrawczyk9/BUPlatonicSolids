@@ -1,0 +1,14 @@
+Normal Builder works like this:
+	Button clicked -> Node.cs Instantiate()'s a Node at the position of Spawner, which is permanently parented to the Camera.
+
+How AutoBuilder would work:
+public void Button() {
+	SpawnManager spawner;
+	File f_points = open("points.txt");
+	String nextCoord_str = f_points.readline()
+	while( nextCoord_str != "" ){
+		Vector3 nextCoord = str2vec3( nextCoord_str );
+		spawner.SetPos(nextCoord);
+		spawner.SpawnNode();
+	}
+}
