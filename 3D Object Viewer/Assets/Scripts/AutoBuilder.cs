@@ -5,7 +5,8 @@ using System.IO;
 
 public class AutoBuilder : MonoBehaviour
 {
-    public SpawnManager spawnManager;
+    [SerializeField] SpawnManager spawnManager;
+    [SerializeField] SelectionSystem selectionSystem;
     Dictionary<uint, Node> nodes;
 
     void Start()
@@ -42,8 +43,12 @@ public class AutoBuilder : MonoBehaviour
         {
             nextFace_str = f_faces.ReadLine();
             List<uint> nextVerts = CsvToUints(nextFace_str);
-            //TODO create face from list of verts
-
+            List<GameObject> nextNodes = new List<GameObject>();
+            foreach(uint id in nextVerts)
+            {
+                nextNodes.Add(nodes[id].gameObject);
+            }
+            selectionSystem.SpawnFace(nextNodes);
         }
     }
 
