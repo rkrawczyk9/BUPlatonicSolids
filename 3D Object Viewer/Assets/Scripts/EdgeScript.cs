@@ -66,12 +66,12 @@ public class EdgeScript : IDeletable
     public override void Delete()
     {
         // Remove left node's references to other node and edge
-        nodes[0].GetComponent<Node>().connectedEdges.Remove(this.gameObject);
-        nodes[0].GetComponent<Node>().connectedNodes.Remove(nodes[1]);
+        nodes[0].GetComponent<NodeOld>().connectedEdges.Remove(this.gameObject);
+        nodes[0].GetComponent<NodeOld>().connectedNodes.Remove(nodes[1]);
 
         // Remove right node's references to other node and edge
-        nodes[1].GetComponent<Node>().connectedEdges.Remove(this.gameObject);
-        nodes[1].GetComponent<Node>().connectedNodes.Remove(nodes[0]);
+        nodes[1].GetComponent<NodeOld>().connectedEdges.Remove(this.gameObject);
+        nodes[1].GetComponent<NodeOld>().connectedNodes.Remove(nodes[0]);
 
         // Destroy
         Destroy(this.gameObject);

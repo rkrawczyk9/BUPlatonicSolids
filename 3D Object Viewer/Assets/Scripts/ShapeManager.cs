@@ -29,7 +29,7 @@ public class ShapeManager : MonoBehaviour
         foreach(GameObject node in allNodes)
         {
             Debug.Log("Setting node " + node.name);
-            node.GetComponent<Node>().SetEdges();
+            node.GetComponent<NodeOld>().SetEdges();
         }
         //GenerateAdjacencyMatrix();
     }

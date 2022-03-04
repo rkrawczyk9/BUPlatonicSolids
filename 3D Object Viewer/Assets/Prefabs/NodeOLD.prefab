@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 916968809027234424}
   - component: {fileID: -7323106829786117146}
   - component: {fileID: 4675955236560051510}
-  - component: {fileID: 3687435472203548319}
+  - component: {fileID: 3305907535519294221}
   m_Layer: 0
-  m_Name: Node
+  m_Name: NodeOLD
   m_TagString: Node
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,7 +114,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3687435472203548319
+--- !u!114 &3305907535519294221
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,10 +123,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2692314793449138421}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 971d341cbf0e33c42bf512e1518e2946, type: 3}
+  m_Script: {fileID: 11500000, guid: 7603de67d4514c74eb1e8da5a3cecc9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linkedNodes: []
-  linkedFaces: []
-  claimed: 0
-  claimedColor: {r: 0.05049946, g: 0.3679245, b: 0, a: 1}
+  connectedNodes: []
+  connectedEdges: []
+  connectedFaces: []
+  edgePrefab: {fileID: 2783104939039852897, guid: 4b804bc66ab9d6343a61991af64c531b, type: 3}

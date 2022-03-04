@@ -7,6 +7,8 @@ public class SelectionSystem : MonoBehaviour
 {
     public List<GameObject> selectedObjects = new List<GameObject>();
 
+    public GameObject facePrefab;
+
     public GameplayControls controller;
 
     public Material defaultMaterial;
@@ -17,6 +19,8 @@ public class SelectionSystem : MonoBehaviour
     InputAction mousePos;
     InputAction shift;
     InputAction link;
+    InputAction escape;
+    InputAction f;
 
     bool multiSelecting = false;
 
@@ -30,20 +34,27 @@ public class SelectionSystem : MonoBehaviour
         leftCLick = controller.Player.Select;
         rightClick = controller.Player.Delete;
         link = controller.Player.Link;
+        escape = controller.Player.Escape;
+        f = controller.Player.F;
 
         shift.started += ctx => multiSelecting = true;
         shift.canceled += ctx => multiSelecting = false;
 
-        link.performed += ctx => LinkEdges();
+        // link.performed += ctx => LinkEdges();
+        link.performed += ctx => SpawnFace();
 
         leftCLick.performed += ctx => TrySelect();
         rightClick.performed += ctx => TryDelete();
+        escape.performed += ctx => ClearSelection();
+        f.performed += ctx => SelectNode();
 
         leftCLick.Enable();
         rightClick.Enable();
         mousePos.Enable();
         shift.Enable();
         link.Enable();
+        escape.Enable();
+        f.Enable();
     }
 
     public Vector2 MousePos
@@ -54,17 +65,50 @@ public class SelectionSystem : MonoBehaviour
         }
     }
 
+    public void TrySelect()
+    {
+        RaycastHit hitInfo;
+        Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
+        if (!multiSelecting)
+        {
+            ClearSelection();
+        }
+
+        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
+        {
+            // Add hit object to list
+            if (hitInfo.collider.gameObject != null)
+            {
+                hitInfo.collider.gameObject.GetComponent<Renderer>().material = selectedMaterial;
+
+                if (!selectedObjects.Contains(hitInfo.collider.gameObject))
+                    selectedObjects.Add(hitInfo.collider.gameObject);
+            }
+        }
+    }
+
+    public void ClearSelection()
+    {
+        foreach (GameObject obj in selectedObjects)
+        {
+            obj.GetComponent<Renderer>().material = defaultMaterial;
+        }
+        selectedObjects.Clear();
+    }
+
     public void TryDelete()
     {
+        Debug.Log("Calling delete");
         RaycastHit hitInfo;
         Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
 
         if(Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
         {
-            //Debug.Log("Hit");
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
             {
+                Debug.Log("Hit something!");
+
                 IDeletable temp;
                 if(hitInfo.collider.TryGetComponent<IDeletable>(out temp))
                 {
@@ -79,38 +123,27 @@ public class SelectionSystem : MonoBehaviour
             }
         }
     }
-
-
-    public void TrySelect()
+    public void SpawnFace()
     {
-        RaycastHit hitInfo;
-        Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
-        //Debug.Log("Shoot");
-        if (!multiSelecting)
-        {
-            foreach(GameObject obj in selectedObjects)
-            {
-                obj.GetComponent<Renderer>().material = defaultMaterial;
-            }
-            selectedObjects.Clear();
-        }
-            
+        GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        newFace.GetComponent<Face>().SpawnFace(selectedObjects);
+    }
 
-        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
+    /// <summary>
+    /// Select the one main node
+    /// </summary>
+    public void SelectNode()
+    {
+        //Debug.Log("Selecting node!");
+        if(selectedObjects.Count > 0 && selectedObjects[0].CompareTag("Node"))
         {
-            //Debug.Log("Hit");
-            // Add hit object to list
-            if (hitInfo.collider.gameObject != null)
-            {
-                hitInfo.collider.gameObject.GetComponent<Renderer>().material = selectedMaterial;
-
-                if (!selectedObjects.Contains(hitInfo.collider.gameObject))
-                    selectedObjects.Add(hitInfo.collider.gameObject);
-            }
+            selectedObjects[0].GetComponent<Node>().ClaimNode();
         }
     }
 
-    public void LinkEdges()
+    #region Old 'Edge' System
+    /*
+    public void LinkNodes()
     {
         Node temp1;
         Node temp2;
@@ -135,13 +168,23 @@ public class SelectionSystem : MonoBehaviour
 
             }
         }
+    }
+
+    public void LinkEdges()
+    {
+        LinkNodes();
+
+        NodeOld temp1;
 
         foreach (GameObject node in selectedObjects)
         {
-            if (node.TryGetComponent<Node>(out temp1))
+            if (node.TryGetComponent<NodeOld>(out temp1))
             {
                 temp1.SetEdges();
             }
         }
     }
+    */
+    #endregion
+
 }

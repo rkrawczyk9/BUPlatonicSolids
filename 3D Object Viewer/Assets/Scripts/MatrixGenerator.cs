@@ -21,26 +21,20 @@ public class MatrixGenerator : MonoBehaviour
         }
     }
 
-    public void GenerateAdjacencyMatrix()
+    public void AjacencyMatrix()
     {
+        allNodes.Clear();
+
         FindNodes();
 
-        //matrix += "\t";
-
-        //foreach (GameObject namineNode in allNodes)
-        //{
-        //    //matrix += namineNode.name + ":\t";
-        //}
-
-       // matrix += "\n";
-
-        foreach (GameObject rowNode in allNodes)
+        for (int r = 0; r < allNodes.Count; r++)
         {
-            //matrix += rowNode.name + ":\t";
-
-            foreach (GameObject columnNode in allNodes)
+            for (int c = 0; c < allNodes.Count; c++)
             {
-                if (rowNode.GetComponent<Node>().HasNode(columnNode))
+                Debug.Log("Row: " + allNodes[r]);
+                Debug.Log("Column: " + allNodes[c]);
+
+                if (allNodes[r].GetComponent<Node>().HasNode(allNodes[c]))
                 {
                     matrix += "1";
                 }
@@ -48,14 +42,18 @@ public class MatrixGenerator : MonoBehaviour
                 {
                     matrix += "0";
                 }
-                matrix += "\t";
+
+                // TODO : Check for last object
+                if(c+1 < allNodes.Count)
+                    matrix += ",";
             }
-            //matrix += "\n";
+            
+            if(r+1 < allNodes.Count)
+                matrix += "\n";
         }
 
         ExportMatrix();
     }
-
 
     public void ExportMatrix()
     {

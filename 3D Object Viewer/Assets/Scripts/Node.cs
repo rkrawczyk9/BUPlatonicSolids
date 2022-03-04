@@ -4,91 +4,114 @@ using UnityEngine;
 
 public class Node : IDeletable
 {
+    public List<GameObject> linkedNodes = new List<GameObject>();
+    public List<GameObject> linkedFaces = new List<GameObject>();
     public List<GameObject> connectedNodes = new List<GameObject>();
     public List<GameObject> connectedEdges = new List<GameObject>();
     public GameObject edgePrefab;
     public uint id;
 
-    public bool SetEdges()
-    {
-        // Spawn and initialize each 
-        foreach(GameObject obj in connectedNodes)
-        {
-            // Check if this node already exists in the other node
-            List<GameObject> otherEdges = obj.GetComponent<Node>().connectedEdges;
-            bool isFound = false;
-            foreach(GameObject edge in otherEdges)
-            {
-                if(edge.GetComponent<EdgeScript>().CheckOtherNode(this.gameObject))
-                {
-                    isFound = true;
-                    break;
-                }
-            }
-            
-            if(!isFound)
-            {
-                // If not found, spawn a new edge
-                GameObject latestEdge = Instantiate(edgePrefab);
-                latestEdge.GetComponent<EdgeScript>().AssignNodes(this.gameObject, obj);
-                latestEdge.GetComponent<EdgeScript>().Align();
-                connectedEdges.Add(latestEdge);
-                obj.GetComponent<Node>().AddEdge(latestEdge);
-            }
-            
-        }
+    public bool claimed = false;
+    public Color claimedColor;
+    private MeshRenderer ren;
 
+    public void AddNode(GameObject newNode)
+    {
+        if (!linkedNodes.Contains(newNode))
+            linkedNodes.Add(newNode);
+    }
+    public void AddFace(GameObject newFace)
+    {
+        if (!linkedFaces.Contains(newFace))
+            linkedFaces.Add(newFace);
+    }
+
+    public bool HasNode(GameObject node)
+    {
+        if (linkedNodes.Count > 0 && linkedNodes.Contains(node))
+        {
+            return true;
+        }
         return false;
     }
 
-    /// <summary>
-    /// Add node to connect to
-    /// </summary>
-    /// <param name="newNode"></param>
-    public void AddNode(GameObject newNode)
+    public void RemoveNode(GameObject node)
     {
-        if(newNode != this.gameObject && !connectedNodes.Contains(newNode))
+        if (linkedNodes.Count > 0 && linkedNodes.Contains(node))
         {
-            connectedNodes.Add(newNode);
+            linkedNodes.Remove(node);
+        }
+    }
+
+    public void RemoveFace(GameObject face)
+    {
+        if (linkedFaces.Count > 0 && linkedFaces.Contains(face))
+        {
+            linkedFaces.Remove(face);
         }
     }
 
     /// <summary>
-    /// Checks if the passed node has this node
+    /// Check whether or not this and the passed node share any face
     /// </summary>
-    /// <param name="node"></param>
-    /// <returns></returns>
-    public bool HasNode(GameObject node)
+    /// <param name="node">The node being checked</param>
+    public void IsLinked(GameObject node)
     {
-        return connectedNodes.Contains(node);
+        if (linkedNodes.Count <= 0)
+            return;
+
+        bool hasNode = false;
+        foreach(GameObject face in linkedFaces)
+        {
+            if (face.GetComponent<Face>().GetNodes().Contains(node))
+            {
+                hasNode = true;
+                break;
+            }
+        }
+
+        if(!hasNode)
+        {
+            RemoveNode(node);
+        }
     }
 
     /// <summary>
-    /// Add a new edge to its list
+    /// Toggle the claimed status
     /// </summary>
-    /// <param name="newEdge"></param>
-    public void AddEdge(GameObject newEdge)
+    public void ClaimNode()
     {
-        connectedEdges.Add(newEdge);
+        claimed = !claimed;
     }
 
+    public bool IsClaimed()
+    {
+        return claimed;
+    }
 
-    /// <summary>
-    /// Delete this node and its references
-    /// </summary>
     public override void Delete()
     {
-        GameObject[] edges = connectedEdges.ToArray();
+        GameObject[] faces = linkedFaces.ToArray();
 
-
-        for(int i = 0; i < edges.Length; i++)
+        // Delete all faces this is a part of. Face Delete() should handle the node references
+        for(int i = 0; i < faces.Length; i++)
         {
-            edges[i].GetComponent<EdgeScript>().Delete();
+            faces[i].GetComponent<Face>().Delete();
         }
 
-        Debug.Log("Calling self delete");
-        // Delete this node
         Destroy(this.gameObject);
     }
-    
+
+    private void Start()
+    {
+        ren = GetComponent<MeshRenderer>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (claimed && ren != null && ren.material.color != claimedColor)
+        {
+            ren.material.color = claimedColor;
+        }
+    }
 }

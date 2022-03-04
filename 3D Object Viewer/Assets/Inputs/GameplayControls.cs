@@ -97,6 +97,22 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Escape"",
+                    ""type"": ""Button"",
+                    ""id"": ""39b30e76-95b7-4ebc-b699-fc7009dbf2d3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""F"",
+                    ""type"": ""Button"",
+                    ""id"": ""88f20d36-d16f-4ee0-bb90-8309e834b304"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -357,10 +373,32 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""name"": """",
                     ""id"": ""1dd31346-7afd-445d-85f8-60a94819568e"",
                     ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Delete"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5189d82c-2daf-42e8-b653-cdbe5f5cdebf"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a3666bea-3899-49ef-8fe0-ad662cfc8f9b"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""F"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -948,6 +986,8 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
         m_Player_Link = m_Player.FindAction("Link", throwIfNotFound: true);
         m_Player_Delete = m_Player.FindAction("Delete", throwIfNotFound: true);
+        m_Player_Escape = m_Player.FindAction("Escape", throwIfNotFound: true);
+        m_Player_F = m_Player.FindAction("F", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1019,6 +1059,8 @@ public class @GameplayControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Shift;
     private readonly InputAction m_Player_Link;
     private readonly InputAction m_Player_Delete;
+    private readonly InputAction m_Player_Escape;
+    private readonly InputAction m_Player_F;
     public struct PlayerActions
     {
         private @GameplayControls m_Wrapper;
@@ -1033,6 +1075,8 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         public InputAction @Shift => m_Wrapper.m_Player_Shift;
         public InputAction @Link => m_Wrapper.m_Player_Link;
         public InputAction @Delete => m_Wrapper.m_Player_Delete;
+        public InputAction @Escape => m_Wrapper.m_Player_Escape;
+        public InputAction @F => m_Wrapper.m_Player_F;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1072,6 +1116,12 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Delete.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDelete;
                 @Delete.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDelete;
                 @Delete.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDelete;
+                @Escape.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEscape;
+                @Escape.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEscape;
+                @Escape.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEscape;
+                @F.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnF;
+                @F.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnF;
+                @F.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnF;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1106,6 +1156,12 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Delete.started += instance.OnDelete;
                 @Delete.performed += instance.OnDelete;
                 @Delete.canceled += instance.OnDelete;
+                @Escape.started += instance.OnEscape;
+                @Escape.performed += instance.OnEscape;
+                @Escape.canceled += instance.OnEscape;
+                @F.started += instance.OnF;
+                @F.performed += instance.OnF;
+                @F.canceled += instance.OnF;
             }
         }
     }
@@ -1272,6 +1328,8 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         void OnShift(InputAction.CallbackContext context);
         void OnLink(InputAction.CallbackContext context);
         void OnDelete(InputAction.CallbackContext context);
+        void OnEscape(InputAction.CallbackContext context);
+        void OnF(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
