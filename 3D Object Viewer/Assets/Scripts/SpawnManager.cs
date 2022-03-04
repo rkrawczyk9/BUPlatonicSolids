@@ -9,16 +9,24 @@ public class SpawnManager : MonoBehaviour
 
     uint curr_default_id = 1;
 
+    /// <summary>
+    /// Used by the autobuild script
+    /// </summary>
+    /// <returns></returns>
     public Node SpawnNode()
     {
-        Debug.Log("Spawning Node");
+        //Debug.Log("Spawning Node");
         Node newNode = Instantiate(node, spawnPos.transform.position, node.transform.rotation).GetComponent<Node>();
         newNode.id = curr_default_id++;
         return newNode;
     }
 
-    public void SpawnNode(bool test)
+    /// <summary>
+    /// Used by the buttons on UI
+    /// </summary>
+    public void SpawnBuildNode()
     {
-        Instantiate(node, spawnPos.transform.position, node.transform.rotation);
+        Node newNode = Instantiate(node, spawnPos.transform.position, node.transform.rotation).GetComponent<Node>();
+        newNode.id = curr_default_id++;
     }
 }
