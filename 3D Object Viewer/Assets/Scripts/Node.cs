@@ -6,9 +6,9 @@ public class Node : IDeletable
 {
     public List<GameObject> linkedNodes = new List<GameObject>();
     public List<GameObject> linkedFaces = new List<GameObject>();
-    public List<GameObject> connectedNodes = new List<GameObject>();
-    public List<GameObject> connectedEdges = new List<GameObject>();
-    public GameObject edgePrefab;
+    //public List<GameObject> connectedNodes = new List<GameObject>();
+    //public List<GameObject> connectedEdges = new List<GameObject>();
+    //public GameObject edgePrefab;
     public uint id;
 
     public bool claimed = false;

@@ -9,79 +9,30 @@ public class ShapeManager : MonoBehaviour
     [SerializeField] List<GameObject> allNodes = new List<GameObject>();
     
 
-    void Start()
-    {
-        GameObject[] temp = FindObjectsOfType<GameObject>();
-
-        foreach(GameObject obj in temp)
-        {
-            if(obj.CompareTag("Node"))
-            {
-                allNodes.Add(obj.gameObject);
-            }
-        }
-
-        GenerateShapes();
-    }
-
-    private void GenerateShapes()
-    {
-        foreach(GameObject node in allNodes)
-        {
-            Debug.Log("Setting node " + node.name);
-            node.GetComponent<NodeOld>().SetEdges();
-        }
-        //GenerateAdjacencyMatrix();
-    }
-    
-    //private void GenerateAdjacencyMatrix()
+    //void Start()
     //{
-    //    matrix += "\t";
+    //    GameObject[] temp = FindObjectsOfType<GameObject>();
 
-    //    foreach (GameObject namineNode in allNodes)
+    //    foreach(GameObject obj in temp)
     //    {
-    //        matrix += namineNode.name + ":\t";
-    //    }
-
-    //    matrix += "\n";
-
-    //    foreach (GameObject rowNode in allNodes)
-    //    {
-    //        matrix += rowNode.name + ":\t";
-
-    //        foreach(GameObject columnNode in allNodes)
+    //        if(obj.CompareTag("Node"))
     //        {
-    //            if(rowNode.GetComponent<Node>().HasNode(columnNode))
-    //            {
-    //                matrix += "1";
-    //            }
-    //            else
-    //            {
-    //                matrix += "0";
-    //            }
-    //            matrix += "\t";
+    //            allNodes.Add(obj.gameObject);
     //        }
-    //        matrix += "\n";
     //    }
 
-    //    matrixText.text = matrix;
+    //    GenerateShapes();
     //}
 
-
-    //public void ExportMatrix()
+    //private void GenerateShapes()
     //{
-    //    string path = Application.dataPath + "/Matrix.txt";
-
-    //    if(!File.Exists(path))
+    //    foreach(GameObject node in allNodes)
     //    {
-    //        File.WriteAllText(path, matrix);
+    //        Debug.Log("Setting node " + node.name);
+    //        node.GetComponent<NodeOld>().SetEdges();
     //    }
-    //    else
-    //    {
-    //        File.Delete(path);
-    //        File.WriteAllText(path, matrix);
-    //    }
-
-    //    Debug.Log("New Matrix Saved!");
+    //    //GenerateAdjacencyMatrix();
     //}
+    
+    
 }

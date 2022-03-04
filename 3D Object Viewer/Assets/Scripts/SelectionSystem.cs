@@ -129,6 +129,12 @@ public class SelectionSystem : MonoBehaviour
         newFace.GetComponent<Face>().SpawnFace(selectedObjects);
     }
 
+    public void SpawnFace(List<GameObject> nodes)
+    {
+        GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        newFace.GetComponent<Face>().SpawnFace(nodes);
+    }
+
     /// <summary>
     /// Select the one main node
     /// </summary>

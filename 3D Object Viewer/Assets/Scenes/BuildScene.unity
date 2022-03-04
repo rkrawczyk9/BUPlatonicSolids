@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9622e5d51431c14e8c019156a52d671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  node: {fileID: 2692314793449138421, guid: 5ce1a4d01ee3b4145b14ae18820b12a1, type: 3}
+  node: {fileID: 2692314793449138421, guid: 9364d5e3861540d42a7de49f3d35c55c, type: 3}
   spawnPos: {fileID: 360933266}
 --- !u!1 &382712086
 GameObject:
@@ -355,7 +355,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 941380581}
         m_TargetAssemblyTypeName: MatrixGenerator, Assembly-CSharp
-        m_MethodName: GenerateAdjacencyMatrix
+        m_MethodName: AjacencyMatrix
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -489,7 +489,7 @@ MonoBehaviour:
       - m_Target: {fileID: 360933268}
         m_TargetAssemblyTypeName: SpawnManager, Assembly-CSharp
         m_MethodName: SpawnNode
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -644,11 +644,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6314e543ba8e9f419971c30ef9a0db9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6314e543ba8e9f419971c30ef9a0db9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6314e543ba8e9f419971c30ef9a0db9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -676,6 +676,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6314e543ba8e9f419971c30ef9a0db9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a6314e543ba8e9f419971c30ef9a0db9, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a6314e543ba8e9f419971c30ef9a0db9, type: 3}
@@ -811,6 +815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedObjects: []
+  facePrefab: {fileID: 2692314793449138421, guid: 4aa9b702162fedc4a95fb0a23fb50295, type: 3}
   defaultMaterial: {fileID: 2100000, guid: abf112282e593ad469abacbf8633a7f0, type: 2}
   selectedMaterial: {fileID: 2100000, guid: 71e511ad2f71a4c47a5bc2b8d123b7af, type: 2}
 --- !u!114 &941380581
@@ -871,6 +876,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
