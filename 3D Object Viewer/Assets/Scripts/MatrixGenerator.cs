@@ -58,15 +58,20 @@ public class MatrixGenerator : MonoBehaviour
     public void ExportMatrix()
     {
         string path = Application.dataPath + "/Matrix.txt";
-
+        string path2 = Application.dataPath + "/JSON Test.json";
         if (!File.Exists(path))
         {
             File.WriteAllText(path, matrix);
+            File.WriteAllText(path2, matrix);
+
         }
         else
         {
             File.Delete(path);
             File.WriteAllText(path, matrix);
+
+            File.Delete(path2);
+            File.WriteAllText(path2, matrix);
         }
 
         Debug.Log("New Matrix Saved!");
