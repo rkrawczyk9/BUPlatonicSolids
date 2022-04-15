@@ -11,7 +11,7 @@ public class SelectionSystem : MonoBehaviour
 
     public GameplayControls controller;
 
-    public Material defaultMaterial;
+    Material defaultMaterial;
     public Material selectedMaterial;
 
     InputAction leftCLick;
@@ -79,6 +79,7 @@ public class SelectionSystem : MonoBehaviour
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
             {
+                defaultMaterial = hitInfo.collider.gameObject.GetComponent<Renderer>().material;
                 hitInfo.collider.gameObject.GetComponent<Renderer>().material = selectedMaterial;
 
                 if (!selectedObjects.Contains(hitInfo.collider.gameObject))

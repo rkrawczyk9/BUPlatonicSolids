@@ -13,7 +13,7 @@ public class AutoBuilder : MonoBehaviour
 
     void Start()
     {
-        BuildFromFile("hypercube coordinates", "hypercube faces");
+        BuildFromFile("600CellVertexCoordinates", "600CellFacesMadeWithCoordinates", 10, 0, 1);
     }
 
     void Update()
@@ -21,7 +21,7 @@ public class AutoBuilder : MonoBehaviour
         
     }
 
-    public void BuildFromFile(string points= "hypercube coordinates", string faces="hypercube faces", float factor=10)
+    public void BuildFromFile(string points= "hypercube coordinates", string faces="hypercube faces", float sizeFactor=10, float fourthDimSizeOffset=1,float fourthDimSizeFactor=1)
     {
         nodes = new Dictionary<uint, Node>();
 
@@ -59,15 +59,20 @@ public class AutoBuilder : MonoBehaviour
         foreach (string line in lines_points)
         {
             uint nextId;
-            Vector4 nextCoord = CsvToVec4AndId(line, out nextId);
-            print($"Creating vert at: {nextCoord}");
+            bool readSuccess;
+            Vector4 nextCoord = CsvToVec4AndId(line, out nextId, out readSuccess);
+            if (!readSuccess)
+            {
+                continue;
+            }
+            print($"Autobuilder: Creating vert at: {nextCoord}");
 
             // Do stuff with coordinate
-            // Create modified 
+            // Modify coordinate for 4th dimension
+            float fourthDimScale = fourthDimSizeOffset + fourthDimSizeFactor * nextCoord[3];
 
             // Spawn node
-            float fourthDimScale = 1 + nextCoord[3];
-            spawnTarget.transform.position = factor * fourthDimScale * new Vector3(nextCoord[0], nextCoord[1], nextCoord[2]); // Throws out the fourth dimension
+            spawnTarget.transform.position = sizeFactor * fourthDimScale * new Vector3(nextCoord[0], nextCoord[1], nextCoord[2]); // Throws out the fourth dimension
             Node node = spawnManager.SpawnNode();
             node.id = nextId;
             nodes[nextId] = node;
@@ -76,7 +81,12 @@ public class AutoBuilder : MonoBehaviour
         // Reading faces
         foreach (string line in lines_faces)
         {
-            List<uint> nextVerts = CsvToUints(line);
+            bool readSuccess;
+            List<uint> nextVerts = CsvToUints(line, out readSuccess);
+            if (!readSuccess)
+            {
+                continue;
+            }
 
             List<GameObject> nextNodes = new List<GameObject>();
             foreach(uint id in nextVerts)
@@ -86,33 +96,43 @@ public class AutoBuilder : MonoBehaviour
 
             // Do stuff with vert list
             // Spawn face
-            print($"Creating face from verts: {ListToString(nextNodes)}");
+            print($"Autobuilder: Creating face from verts: {ListToString(nextNodes)}");
             selectionSystem.SpawnFace(nextNodes);
         }
     }
 
-    Vector4 CsvToVec4AndId(string csvLine, out uint vertId)
+    Vector4 CsvToVec4AndId(string csvLine, out uint vertId, out bool success)
     {
         Vector4 vec4 = new Vector4();
         string[] strs = csvLine.Split(',');
+
         try
         {
             vertId = uint.Parse(strs[0]);
-            vec4[0] = int.Parse(strs[1]);
-            vec4[1] = int.Parse(strs[2]);
-            vec4[2] = int.Parse(strs[3]);
-            vec4[3] = int.Parse(strs[4]);
         }
         catch
         {
-            print($"Failure in line: {csvLine}");
-            vertId = 999;
-            return vec4;
+            print($"Failure reading ID in line: {csvLine}");
+            vertId = 0;
+            success = false;
         }
+        try
+        {
+            vec4[0] = float.Parse(strs[1]);
+            vec4[1] = float.Parse(strs[2]);
+            vec4[3] = float.Parse(strs[4]);
+            vec4[2] = float.Parse(strs[3]);
+        }
+        catch
+        {
+            print($"Failure reading coordinates in line: {csvLine}");
+            success = false;
+        }
+        success = true;
         return vec4;
     }
 
-    List<uint> CsvToUints(string csvLine)
+    List<uint> CsvToUints(string csvLine, out bool success)
     {
         List<uint> uints = new List<uint>();
         string[] strs = csvLine.Split(',');
@@ -126,9 +146,9 @@ public class AutoBuilder : MonoBehaviour
         catch
         {
             print($"Failure in line: {csvLine}");
-            return uints;
+            success = false;
         }
-
+        success = true;
         return uints;
     }
 
