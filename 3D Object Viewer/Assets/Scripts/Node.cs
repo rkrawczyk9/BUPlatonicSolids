@@ -1,19 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Node : IDeletable
 {
     public List<GameObject> linkedNodes = new List<GameObject>();
     public List<GameObject> linkedFaces = new List<GameObject>();
-    //public List<GameObject> connectedNodes = new List<GameObject>();
-    //public List<GameObject> connectedEdges = new List<GameObject>();
-    //public GameObject edgePrefab;
-    public uint id;
+    public uint id = 0;
+    public List<TextMeshProUGUI> tags = new List<TextMeshProUGUI>();
+
 
     public bool claimed = false;
     public Color claimedColor;
     private MeshRenderer ren;
+
+    private void Awake()
+    {
+        StartCoroutine(SetID());
+    }
 
     public void AddNode(GameObject newNode)
     {
@@ -105,6 +110,8 @@ public class Node : IDeletable
     private void Start()
     {
         ren = GetComponent<MeshRenderer>();
+
+        
     }
 
     private void FixedUpdate()
@@ -112,6 +119,24 @@ public class Node : IDeletable
         if (claimed && ren != null && ren.material.color != claimedColor)
         {
             ren.material.color = claimedColor;
+        }
+    }
+
+    private IEnumerator SetID()
+    {
+        // Keep trying to set the text labels to ID until its successful
+        while(true)
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (tags.Count != 0 && tags[0].text == "" && id != 0)
+            {
+                foreach(var txt in tags)
+                {
+                    txt.text = id.ToString();
+                }
+                break;
+            }
+            yield return null;
         }
     }
 }
