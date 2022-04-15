@@ -63,8 +63,11 @@ public class AutoBuilder : MonoBehaviour
             print($"Creating vert at: {nextCoord}");
 
             // Do stuff with coordinate
+            // Create modified 
+
             // Spawn node
-            spawnTarget.transform.position = factor * new Vector3(nextCoord[0], nextCoord[1], nextCoord[2]); // Throws out the fourth dimension
+            float fourthDimScale = 1 + nextCoord[3];
+            spawnTarget.transform.position = factor * fourthDimScale * new Vector3(nextCoord[0], nextCoord[1], nextCoord[2]); // Throws out the fourth dimension
             Node node = spawnManager.SpawnNode();
             node.id = nextId;
             nodes[nextId] = node;
