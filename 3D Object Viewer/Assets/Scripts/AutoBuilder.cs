@@ -7,11 +7,13 @@ public class AutoBuilder : MonoBehaviour
 {
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] SelectionSystem selectionSystem;
+    [SerializeField] GameObject spawnTarget;
+
     Dictionary<uint, Node> nodes;
 
     void Start()
     {
-        
+        BuildFromFile("hypercube coordinates", "hypercube faces");
     }
 
     void Update()
@@ -19,35 +21,69 @@ public class AutoBuilder : MonoBehaviour
         
     }
 
-    public void BuildFromFile(string points="points.txt", string faces="faces.txt")
+    public void BuildFromFile(string points= "hypercube coordinates", string faces="hypercube faces", float factor=10)
     {
         nodes = new Dictionary<uint, Node>();
-        // Reading vertices
-        StreamReader f_points = new StreamReader(points);
-        string nextCoord_str = "init";
-        while (nextCoord_str != null)
+
+        // Load files
+        TextAsset txt_points = Resources.Load<TextAsset>(points);
+        TextAsset txt_faces = Resources.Load<TextAsset>(faces);
+        // Check that they were found
+        if(txt_points == null)
         {
-            nextCoord_str = f_points.ReadLine();
+            print($"Autobuilder: Vertices file {points} not found");
+            return;
+        }
+        if (txt_faces == null)
+        {
+            print($"Autobuilder: Faces file {faces} not found");
+            return;
+        }
+
+        // Split the files into lines
+        string[] lines_points = txt_points.text.Split('\n');
+        string[] lines_faces = txt_faces.text.Split('\n');
+        // Check not empty
+        if (lines_points.Length <= 1)
+        {
+            print($"Autobuilder: Vertices file {points} empty");
+            return;
+        }
+        if (lines_faces.Length <= 1)
+        {
+            print($"Autobuilder: Faces file {faces} empty");
+            return;
+        }
+
+        // Reading vertices
+        foreach (string line in lines_points)
+        {
             uint nextId;
-            Vector4 nextCoord = CsvToVec4AndId(nextCoord_str, out nextId);
-            spawnManager.transform.position = new Vector3(nextCoord[0], nextCoord[1], nextCoord[2]); // Throws out the fourth dimension
+            Vector4 nextCoord = CsvToVec4AndId(line, out nextId);
+            print($"Creating vert at: {nextCoord}");
+
+            // Do stuff with coordinate
+            // Spawn node
+            spawnTarget.transform.position = factor * new Vector3(nextCoord[0], nextCoord[1], nextCoord[2]); // Throws out the fourth dimension
             Node node = spawnManager.SpawnNode();
             node.id = nextId;
             nodes[nextId] = node;
         }
 
         // Reading faces
-        StreamReader f_faces = new StreamReader(faces);
-        string nextFace_str = "init";
-        while (nextFace_str != null)
+        foreach (string line in lines_faces)
         {
-            nextFace_str = f_faces.ReadLine();
-            List<uint> nextVerts = CsvToUints(nextFace_str);
+            List<uint> nextVerts = CsvToUints(line);
+
             List<GameObject> nextNodes = new List<GameObject>();
             foreach(uint id in nextVerts)
             {
                 nextNodes.Add(nodes[id].gameObject);
             }
+
+            // Do stuff with vert list
+            // Spawn face
+            print($"Creating face from verts: {ListToString(nextNodes)}");
             selectionSystem.SpawnFace(nextNodes);
         }
     }
@@ -91,5 +127,16 @@ public class AutoBuilder : MonoBehaviour
         }
 
         return uints;
+    }
+
+    string ListToString(List<GameObject> list)
+    {
+        string str = "[";
+        foreach(GameObject elem in list)
+        {
+            str += elem.name + ", ";
+        }
+        // Chop off last comma and add ]
+        return str.Substring(0, str.Length-1) + "]";
     }
 }
