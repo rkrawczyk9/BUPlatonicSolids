@@ -129,8 +129,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linkedNodes: []
-  claimed: 0
-  claimedColor: {r: 0.54623806, g: 1, b: 0.390566, a: 0}
+  normal: {fileID: 2100000, guid: abf112282e593ad469abacbf8633a7f0, type: 2}
+  transparent: {fileID: 2100000, guid: 56b8aeb5e1ac8514f8ac4d190f272aae, type: 2}
+  claimedColor: {r: 0.54623806, g: 1, b: 0.390566, a: 0.47058824}
 --- !u!120 &8936160226258254501
 LineRenderer:
   m_ObjectHideFlags: 0

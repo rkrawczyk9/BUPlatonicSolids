@@ -31,22 +31,19 @@ public class SolutionChecker : MonoBehaviour
 
     private bool CheckFaces()
     {
-        GameObject[] temp = FindObjectsOfType<GameObject>();
+        Face[] temp = FindObjectsOfType<Face>();
 
         faces.Clear();
         missingFaces.Clear();
 
-        foreach (GameObject obj in temp)
+        foreach (Face obj in temp)
         {
-            if (obj.CompareTag("Face"))
-            {
-                faces.Add(obj.GetComponent<Face>());
-            }
+            faces.Add(obj);
         }
 
         foreach(Face f in faces)
         {
-            if (!f.claimed)
+            if (!f.Claimed)
             {
                 missingFaces.Add(f);
             }
@@ -55,6 +52,18 @@ public class SolutionChecker : MonoBehaviour
         return missingFaces.Count <= 0;
     }
     
+    public void ToggleFaceMat()
+    {
+        Face[] temp = FindObjectsOfType<Face>();
+        Debug.Log("Faces found: " + temp.Length);
+
+        foreach (Face obj in temp)
+        {
+            obj.ToggleTransparency();
+        }
+
+    }
+
     private void CheckNodes()
     {
         GameObject[] temp = FindObjectsOfType<GameObject>();
