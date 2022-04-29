@@ -5,26 +5,36 @@ using UnityEngine.InputSystem;
 
 public class SelectionSystem : MonoBehaviour
 {
-    public List<GameObject> selectedObjects = new List<GameObject>();
+    [Tooltip("Face prefab to spawn")]
+    [SerializeField] private GameObject facePrefab;
+    [Tooltip("Material to use when an object is selected")]
+    [SerializeField] private Material selectedMaterial;
 
-    public GameObject facePrefab;
+    /// <summary>
+    /// all currently selected gameobjects
+    /// </summary>
+    private List<GameObject> selectedObjects = new List<GameObject>();
+    
+    /// <summary>
+    /// Input control variables
+    /// </summary>
+    private GameplayControls controller;
+    private InputAction leftCLick;
+    private InputAction rightClick;
+    private InputAction mousePos;
+    private InputAction shift;
+    private InputAction link;
+    private InputAction escape;
+    private InputAction clear;
 
-    public GameplayControls controller;
+    /// <summary>
+    /// Whether or not shift is being pressed
+    /// </summary>
+    private bool shiftMod = false;
 
-    Material defaultMaterial;
-    public Material selectedMaterial;
-
-    InputAction leftCLick;
-    InputAction rightClick;
-    InputAction mousePos;
-    InputAction shift;
-    InputAction link;
-    InputAction escape;
-    InputAction f;
-
-    bool multiSelecting = false;
-
-    // Start is called before the first frame update
+    /// <summary>
+    /// Prepare input system
+    /// </summary>
     void Start()
     {
         controller = new GameplayControls();
@@ -32,21 +42,19 @@ public class SelectionSystem : MonoBehaviour
         mousePos = controller.Player.MousePos;
         shift = controller.Player.Shift;
         leftCLick = controller.Player.Select;
-        rightClick = controller.Player.Delete;
+        rightClick = controller.Player.RightClick;
         link = controller.Player.Link;
         escape = controller.Player.Escape;
-        f = controller.Player.F;
+        clear = controller.Player.Clear;
 
-        shift.started += ctx => multiSelecting = true;
-        shift.canceled += ctx => multiSelecting = false;
+        shift.started += ctx => shiftMod = true;
+        shift.canceled += ctx => shiftMod = false;
 
-        // link.performed += ctx => LinkEdges();
         link.performed += ctx => SpawnFace();
-
         leftCLick.performed += ctx => TrySelect();
-        rightClick.performed += ctx => TryDelete();
+        rightClick.performed += ctx => RightClick();
         escape.performed += ctx => ClearSelection();
-        f.performed += ctx => SelectNode();
+        clear.performed += ctx => ResetAll();
 
         leftCLick.Enable();
         rightClick.Enable();
@@ -54,9 +62,12 @@ public class SelectionSystem : MonoBehaviour
         shift.Enable();
         link.Enable();
         escape.Enable();
-        f.Enable();
+        clear.Enable();
     }
 
+    /// <summary>
+    /// public getter for mouse position
+    /// </summary>
     public Vector2 MousePos
     {
         get
@@ -65,11 +76,14 @@ public class SelectionSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Try selecting a game object
+    /// </summary>
     public void TrySelect()
     {
         RaycastHit hitInfo;
         Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
-        if (!multiSelecting)
+        if (!shiftMod)
         {
             ClearSelection();
         }
@@ -79,27 +93,74 @@ public class SelectionSystem : MonoBehaviour
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
             {
-                defaultMaterial = hitInfo.collider.gameObject.GetComponent<Renderer>().material;
-                hitInfo.collider.gameObject.GetComponent<Renderer>().material = selectedMaterial;
+                GameObject obj = hitInfo.collider.gameObject;
+                if (!selectedObjects.Contains(obj))
+                    selectedObjects.Add(obj);
 
-                if (!selectedObjects.Contains(hitInfo.collider.gameObject))
-                    selectedObjects.Add(hitInfo.collider.gameObject);
+                // Tell selected object its selected and to stop updating its color, color selected
+                obj.GetComponent<IDeletable>().Selected(true);
+                obj.GetComponent<Renderer>().material = selectedMaterial;
             }
         }
     }
 
+    /// <summary>
+    /// Clear the selection of objects
+    /// </summary>
     public void ClearSelection()
     {
         foreach (GameObject obj in selectedObjects)
         {
-            obj.GetComponent<Renderer>().material = defaultMaterial;
+            obj.GetComponent<IDeletable>().Selected(false);
         }
         selectedObjects.Clear();
     }
 
+    /// <summary>
+    /// Perform the right click action
+    /// </summary>
+    public void RightClick()
+    {
+        // Toggle node claim if not shift, delete if shift. 
+        if(!shiftMod)
+        {
+            TrySelect();
+            ClaimNode();
+            ClearSelection();
+        }
+        else
+        {
+            TryDelete();
+        }
+    }
+
+    /// <summary>
+    /// Claim the targeted node
+    /// </summary>
+    public void ClaimNode()
+    {
+        RaycastHit hitInfo;
+        Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
+
+        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
+        {
+            // Add hit object to list
+            if (hitInfo.collider.gameObject != null)
+            {
+                Node temp;
+                if (hitInfo.collider.TryGetComponent<Node>(out temp))
+                {
+                    temp.ClaimNode();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Try deleting the hit node or face
+    /// </summary>
     public void TryDelete()
     {
-        Debug.Log("Calling delete");
         RaycastHit hitInfo;
         Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
 
@@ -108,90 +169,48 @@ public class SelectionSystem : MonoBehaviour
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
             {
-                Debug.Log("Hit something!");
-
                 IDeletable temp;
                 if(hitInfo.collider.TryGetComponent<IDeletable>(out temp))
                 {
                     temp.Delete();
                 }
 
-                foreach (GameObject obj in selectedObjects)
-                {
-                    obj.GetComponent<Renderer>().material = defaultMaterial;
-                }
                 selectedObjects.Clear();
             }
         }
     }
+
+    /// <summary>
+    /// Delete every node in scene, reset ID system
+    /// </summary>
+    public void ResetAll()
+    {
+        Node[] temp = FindObjectsOfType<Node>();
+
+        for (int i = 0; i < temp.Length; i++)
+        {
+            temp[i].Delete();
+        }
+
+        FindObjectOfType<SpawnManager>().ResetID();
+    }
+
+    /// <summary>
+    /// Spawn in the face between selected nodes. Used by UI
+    /// </summary>
     public void SpawnFace()
     {
         GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         newFace.GetComponent<Face>().SpawnFace(selectedObjects);
     }
 
+    /// <summary>
+    /// Spawn in the face between selected nodes. Used by autobuilder
+    /// </summary>
+    /// <param name="nodes">All nodes to be use when making the face</param>
     public void SpawnFace(List<GameObject> nodes)
     {
         GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
         newFace.GetComponent<Face>().SpawnFace(nodes);
     }
-
-    /// <summary>
-    /// Select the one main node
-    /// </summary>
-    public void SelectNode()
-    {
-        //Debug.Log("Selecting node!");
-        if(selectedObjects.Count > 0 && selectedObjects[0].CompareTag("Node"))
-        {
-            selectedObjects[0].GetComponent<Node>().ClaimNode();
-        }
-    }
-
-    #region Old 'Edge' System
-    /*
-    public void LinkNodes()
-    {
-        Node temp1;
-        Node temp2;
-        foreach (GameObject node in selectedObjects)
-        {
-            if (node.TryGetComponent<Node>(out temp1))
-            {
-
-                foreach (GameObject node2 in selectedObjects)
-                {
-                    if (node2.TryGetComponent<Node>(out temp2))
-                    {
-
-                        if (temp1 != temp2)
-                        {
-                            temp1.AddNode(temp2.gameObject);
-                            temp2.AddNode(temp1.gameObject);
-                        }
-
-                    }
-                }
-
-            }
-        }
-    }
-
-    public void LinkEdges()
-    {
-        LinkNodes();
-
-        NodeOld temp1;
-
-        foreach (GameObject node in selectedObjects)
-        {
-            if (node.TryGetComponent<NodeOld>(out temp1))
-            {
-                temp1.SetEdges();
-            }
-        }
-    }
-    */
-    #endregion
-
 }

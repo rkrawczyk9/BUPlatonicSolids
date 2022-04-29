@@ -72,7 +72,7 @@ public class SolutionChecker : MonoBehaviour
 
         foreach (GameObject obj in temp)
         {
-            if (obj.CompareTag("Node") && obj.GetComponent<Node>().claimed)
+            if (obj.CompareTag("Node") && obj.GetComponent<Node>().IsClaimed())
             {
                 claimedNodes.Add(obj.GetComponent<Node>());
             }
@@ -84,5 +84,4 @@ public class SolutionChecker : MonoBehaviour
             Debug.Log(node.id);
         }
     }
-
 }

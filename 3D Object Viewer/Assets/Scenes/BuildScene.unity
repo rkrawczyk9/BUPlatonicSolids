@@ -355,7 +355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   node: {fileID: 2692314793449138421, guid: 9364d5e3861540d42a7de49f3d35c55c, type: 3}
-  spawnPos: {fileID: 360933266}
+  spawnPos: {fileID: 2082416977}
 --- !u!1 &382712086
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,6 +988,7 @@ MonoBehaviour:
   rotateSpeed: 0.15
   rotateSpeedMultiplier: 6
   tiltSpeed: 0.08
+  tiltBounds: {x: 90, y: -90}
   zoomSpeed: 500
   closeZoom: -10
   farZoom: -40
@@ -1005,9 +1006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ed2a1ae1d839e14db971201460054a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedObjects: []
   facePrefab: {fileID: 2692314793449138421, guid: 4aa9b702162fedc4a95fb0a23fb50295, type: 3}
-  defaultMaterial: {fileID: 2100000, guid: abf112282e593ad469abacbf8633a7f0, type: 2}
   selectedMaterial: {fileID: 2100000, guid: 71e511ad2f71a4c47a5bc2b8d123b7af, type: 2}
 --- !u!114 &941380581
 MonoBehaviour:
@@ -1718,3 +1717,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2082416977 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a6314e543ba8e9f419971c30ef9a0db9, type: 3}
+  m_PrefabInstance: {fileID: 890599468}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2082416978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082416977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f3f3b716284a45499db83ba461b8bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

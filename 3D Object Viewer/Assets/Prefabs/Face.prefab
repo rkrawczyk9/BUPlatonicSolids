@@ -128,10 +128,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f71a97c651f19eb40906dfd32d6dbc70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalMaterial: {fileID: 2100000, guid: abf112282e593ad469abacbf8633a7f0, type: 2}
+  claimedMaterial: {fileID: 2100000, guid: c65cbd8e86a9609479e9252a200ce046, type: 2}
   linkedNodes: []
-  normal: {fileID: 2100000, guid: abf112282e593ad469abacbf8633a7f0, type: 2}
-  transparent: {fileID: 2100000, guid: 56b8aeb5e1ac8514f8ac4d190f272aae, type: 2}
-  claimedColor: {r: 0.54623806, g: 1, b: 0.390566, a: 0.47058824}
+  transparentMat: {fileID: 2100000, guid: 56b8aeb5e1ac8514f8ac4d190f272aae, type: 2}
+  borderMat: {fileID: 2100000, guid: 1d65cdddcfb782f4d8745d1455c9c911, type: 2}
+  claimedBorderMat: {fileID: 2100000, guid: eedff2551ae7fbf498a5c1ebb2bcde48, type: 2}
+  borderThickness: {x: 0.1, y: 1}
 --- !u!120 &8936160226258254501
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -172,7 +175,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
@@ -184,7 +187,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.08480835
+        value: 0.1411438
         inSlope: 0
         outSlope: 0
         tangentMode: 0

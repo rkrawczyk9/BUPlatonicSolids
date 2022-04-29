@@ -101,7 +101,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!135 &4675955236560051510
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -127,14 +127,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 971d341cbf0e33c42bf512e1518e2946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalMaterial: {fileID: 2100000, guid: abf112282e593ad469abacbf8633a7f0, type: 2}
+  claimedMaterial: {fileID: 2100000, guid: eedff2551ae7fbf498a5c1ebb2bcde48, type: 2}
+  id: 0
   linkedNodes: []
   linkedFaces: []
-  id: 0
-  tags:
-  - {fileID: 4188970673619926640}
-  - {fileID: 52122491581989416}
-  claimed: 0
-  claimedColor: {r: 0.05049946, g: 0.3679245, b: 0, a: 1}
 --- !u!1 &3880321609323519060
 GameObject:
   m_ObjectHideFlags: 0

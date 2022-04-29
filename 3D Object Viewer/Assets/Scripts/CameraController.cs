@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float rotateSpeed;
     [SerializeField] private float rotateSpeedMultiplier;
     [SerializeField] private float tiltSpeed;
+    [SerializeField] private Vector2 tiltBounds;
 
     [SerializeField] private float zoomSpeed;
     [SerializeField] private float closeZoom;
@@ -23,7 +24,7 @@ public class CameraController : MonoBehaviour
 
     private Vector3 currentLocation;
     private Vector3 currentRotation;
-    private Vector3 currentTilt;
+    private float currentTilt;
 
     GameplayControls controller;
 
@@ -43,7 +44,7 @@ public class CameraController : MonoBehaviour
     {
         currentLocation = pivot.transform.position;
         currentRotation = pivot.transform.rotation.eulerAngles;
-        currentTilt = cam.transform.rotation.eulerAngles;
+        currentTilt = 0;
         currentZoom = cam.transform.localPosition.z;
 
         controller = new GameplayControls();
@@ -161,16 +162,19 @@ public class CameraController : MonoBehaviour
     {
         float direction = tilt.ReadValue<float>();
 
-        if (direction < 0)
+        // Tilt upwards
+        if (direction < 0 && currentTilt > tiltBounds.y)
         {
             cam.transform.Rotate(Vector3.right, -tiltSpeed);
-            currentTilt = cam.transform.rotation.eulerAngles;
+            currentTilt -= tiltSpeed;
         }
-        else if (direction > 0)
+        // Tilt downwards
+        else if (direction > 0 && currentTilt < tiltBounds.x)
         {
             cam.transform.Rotate(Vector3.right, tiltSpeed);
-            currentTilt = cam.transform.rotation.eulerAngles;
+            currentTilt += tiltSpeed;
         }
+        
     }
 
     private void ZoomCamera()

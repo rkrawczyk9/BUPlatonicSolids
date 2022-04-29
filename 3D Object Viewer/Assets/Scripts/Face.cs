@@ -14,12 +14,12 @@ public class Face : IDeletable
     [Tooltip("List of nodes associated with this face. Do not edit in editor.")]
     [SerializeField] private List<GameObject> linkedNodes = new List<GameObject>();
 
-    [Tooltip("The default material for this face")]
-    [SerializeField] private Material normal;
     [Tooltip("The transparent material for this face")]
-    [SerializeField] private Material transparent;
-    [Tooltip("The claimed material for this face")]
-    [SerializeField] private Color claimedColor;
+    [SerializeField] private Material transparentMat;
+    [Tooltip("The normal material for the border")]
+    [SerializeField] private Material borderMat;
+    [Tooltip("The claimed material for the border")]
+    [SerializeField] private Material claimedBorderMat;
     /// <summary>
     /// Whether or not this face is transparent
     /// </summary>
@@ -45,6 +45,10 @@ public class Face : IDeletable
     /// </summary>
     private MeshRenderer ren;
     /// <summary>
+    /// renderer for the borders of the face
+    /// </summary>
+    private LineRenderer lineRen;
+    /// <summary>
     /// The center of this face
     /// </summary>
     private Vector3 center;
@@ -55,6 +59,7 @@ public class Face : IDeletable
     private void Awake()
     {
         ren = GetComponent<MeshRenderer>();
+        lineRen = GetComponent<LineRenderer>();
         StartCoroutine(UpdateColor());
     }
 
@@ -79,10 +84,64 @@ public class Face : IDeletable
         }
     }
 
+    #region Setup
+
+    /// <summary>
+    /// Sort the nodes in clockwise order
+    /// </summary>
+    private void SortNodes()
+    {
+        int plane = GetPlane();
+
+        List<Angles> angles = new List<Angles>();
+        Angles temp;
+
+        switch (plane)
+        {
+            case 0:
+                // YZ plane
+                foreach (GameObject node in linkedNodes)
+                {
+                    temp.node = node;
+                    temp.angle = QuadrantAngle(node.transform.position.y - center.y, node.transform.position.z - center.z);
+
+                    angles.Add(temp);
+                }
+                break;
+            case 1:
+                // XZ plane
+                foreach (GameObject node in linkedNodes)
+                {
+                    temp.node = node;
+                    temp.angle = QuadrantAngle(node.transform.position.z - center.z, node.transform.position.x - center.x);
+
+                    angles.Add(temp);
+                }
+                break;
+            case 2:
+                // XY plane
+                foreach (GameObject node in linkedNodes)
+                {
+                    temp.node = node;
+                    temp.angle = QuadrantAngle(node.transform.position.y - center.y, node.transform.position.x - center.x);
+
+                    angles.Add(temp);
+                }
+                break;
+        }
+
+        List<GameObject> result = SortByAngles(angles);
+
+        linkedNodes = result;
+
+        GenerateFace();
+    }
+
+
     /// <summary>
     /// Links all nodes with face and eachother data wise
     /// </summary>
-    public void GenerateFace()
+    private void GenerateFace()
     {
         foreach (GameObject node in linkedNodes)
         {
@@ -114,11 +173,11 @@ public class Face : IDeletable
 
         CreateMesh();
     }
-
+    
     /// <summary>
     /// Generate the visual mesh for the face objects with triangles
     /// </summary>
-    public void CreateMesh()
+    private void CreateMesh()
     {
         // Each triangle needs 3 points, 3 UV's, and a single number. Each set of 3 nodes will create 2 triangles
         Vector3[] points = new Vector3[(linkedNodes.Count - 2) * 6];
@@ -167,87 +226,6 @@ public class Face : IDeletable
     }
 
     /// <summary>
-    /// Get all nodes this face is attached to
-    /// </summary>
-    /// <returns>List of node objects</returns>
-    public List<GameObject> GetNodes()
-    {
-        return linkedNodes;
-    }
-
-    /// <summary>
-    /// Sort the nodes in clockwise order
-    /// </summary>
-    private void SortNodes()
-    {
-        int plane = GetPlane();
-
-        List<Angles> angles = new List<Angles>();
-        Angles temp;
-
-        switch (plane)
-        {
-            case 0:
-                // YZ plane
-                foreach (GameObject node in linkedNodes)
-                {
-                    temp.node = node;
-                    temp.angle = QuadrantAngle(node.transform.position.y - center.y, node.transform.position.z - center.z);
-                    
-                    angles.Add(temp);
-                }
-                break;
-            case 1:
-                // XZ plane
-                foreach (GameObject node in linkedNodes)
-                {
-                    temp.node = node;
-                    temp.angle = QuadrantAngle(node.transform.position.z - center.z, node.transform.position.x - center.x);
-                    
-                    angles.Add(temp);
-                }
-                break;
-            case 2:
-                // XY plane
-                foreach (GameObject node in linkedNodes)
-                {
-                    temp.node = node;
-                    temp.angle = QuadrantAngle(node.transform.position.y - center.y, node.transform.position.x - center.x);
-                    
-                    angles.Add(temp);
-                }
-                break;
-        }
-
-        List<GameObject> result = SortByAngles(angles);
-
-        linkedNodes = result;
-
-        GenerateFace();
-    }
-
-    /// <summary>
-    /// Get the angle in a 360 degree range, compensating for quadrants
-    /// </summary>
-    /// <param name="y"> the 'y' value being put into arctan</param>
-    /// <param name="x"> the 'x' value being put into arctan</param>
-    /// <returns>The degree value from the center, [0,360) range</returns>
-    private float QuadrantAngle(float y, float x)
-    {
-        float angle = Mathf.Atan(y / x) * Mathf.Rad2Deg;
-
-        // Quadrant compensation
-        if (x < 0 && y > 0)
-            angle += 180;
-        else if (x < 0 && y < 0)
-            angle += 180;
-        else if (x > 0 && y < 0)
-            angle += 360;
-
-        return angle;
-    }
-
-    /// <summary>
     /// Determine which 2D plane to use for sorting. Finds the axis with smallest variation
     /// </summary>
     /// <returns>The 2D plane that does not contain the axis of least-variation</returns>
@@ -293,7 +271,7 @@ public class Face : IDeletable
         center = new Vector3(xVals.x + differences[0] / 2, yVals.x + differences[1] / 2, zVals.x + differences[2] / 2);
 
         int minIndex = 0;
-        for (int i = 1; i < differences.Length; i++ )
+        for (int i = 1; i < differences.Length; i++)
         {
             if (differences[i] < differences[minIndex])
             {
@@ -302,6 +280,28 @@ public class Face : IDeletable
         }
         return minIndex;
     }
+
+    /// <summary>
+    /// Get the angle in a 360 degree range, compensating for quadrants
+    /// </summary>
+    /// <param name="y"> the 'y' value being put into arctan</param>
+    /// <param name="x"> the 'x' value being put into arctan</param>
+    /// <returns>The degree value from the center, [0,360) range</returns>
+    private float QuadrantAngle(float y, float x)
+    {
+        float angle = Mathf.Atan(y / x) * Mathf.Rad2Deg;
+
+        // Quadrant compensation
+        if (x < 0 && y > 0)
+            angle += 180;
+        else if (x < 0 && y < 0)
+            angle += 180;
+        else if (x > 0 && y < 0)
+            angle += 360;
+
+        return angle;
+    }
+
     /// <summary>
     /// Sorts a given list by angle, returns only node objects
     /// </summary>
@@ -312,13 +312,13 @@ public class Face : IDeletable
         List<GameObject> result = new List<GameObject>();
         int count = data.Count;
 
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             int min = 0;
 
             for (int j = 0; j < data.Count; j++)
             {
-                if(data[j].angle < data[min].angle)
+                if (data[j].angle < data[min].angle)
                 {
                     min = j;
                 }
@@ -329,6 +329,95 @@ public class Face : IDeletable
         }
 
         return result;
+    }
+
+    #endregion
+
+    #region Color Management
+
+    /// <summary>
+    /// Checks if this face is claimed
+    /// </summary>
+    private void CheckStatus()
+    {
+        // Update claimed status
+        bool claimedNode = false;
+
+        foreach (GameObject node in linkedNodes)
+        {
+            if (node.GetComponent<Node>().IsClaimed())
+            {
+                claimedNode = true;
+                break;
+            }
+        }
+
+        claimed = claimedNode;
+
+        // If color locked, don't change colors
+        if (colorLocked)
+        {
+            return;
+        }
+
+        // Update the borders. Done even if marked as transparent
+        if (!claimed && lineRen.material != borderMat)
+        {
+            lineRen.material = borderMat;
+        }
+        else if (claimed && lineRen.material != claimedBorderMat)
+        {
+            lineRen.material = claimedBorderMat;
+        }
+
+        // Update the color appropriately
+        if (isTransparent && ren.material != transparentMat)
+        {
+            ren.material = transparentMat;
+        }
+        else if (!claimed && ren.material != normalMaterial)
+        {
+            ren.material = normalMaterial;
+        }
+        else if (claimed && ren.material != claimedMaterial)
+        {
+            ren.material = claimedMaterial;
+        }
+    }
+
+    /// <summary>
+    /// Occasionally update the color. Do periodically to reduce calls
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator UpdateColor()
+    {
+        WaitForSeconds delay = new WaitForSeconds(0.05f);
+        while (true)
+        {
+            yield return delay;
+            CheckStatus();
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Toggle the transpacency of the face
+    /// </summary>
+    public void ToggleTransparency()
+    {
+        isTransparent = !isTransparent;
+    }
+
+    #endregion
+
+
+    /// <summary>
+    /// Get all nodes this face is attached to
+    /// </summary>
+    /// <returns>List of node objects</returns>
+    public List<GameObject> GetNodes()
+    {
+        return linkedNodes;
     }
 
     /// <summary>
@@ -356,71 +445,5 @@ public class Face : IDeletable
         }
 
         Destroy(this.gameObject);
-    }
-
-    /// <summary>
-    /// Checks if this face is claimed
-    /// </summary>
-    private void CheckStatus()
-    {
-        if (transparent)
-            return;
-
-        bool claimedNode = false;
-        foreach(GameObject node in linkedNodes)
-        {
-            if (node.GetComponent<Node>().IsClaimed())
-            {
-                claimedNode = true;
-                break;
-            }
-        }
-
-        if(!claimed && claimedNode)
-        {
-            claimed = true;
-            ren.material.color = claimedColor;
-        }
-        else if(claimed && !claimedNode)
-        {
-            claimed = false;
-            ren.material.color = Color.white;
-        }
-
-        if (claimed && ren.material.color != claimedColor)
-            ren.material.color = claimedColor;
-    }
-
-    /// <summary>
-    /// Occasionally update the color
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator UpdateColor()
-    {
-        WaitForSeconds delay = new WaitForSeconds(0.1f);
-        while(true)
-        {
-            yield return delay;
-            CheckStatus();
-            yield return null;
-        }
-    }
-
-    /// <summary>
-    /// Toggle the transpacency of the face
-    /// </summary>
-    public void ToggleTransparency()
-    {
-        if(!isTransparent)
-        {
-            Debug.Log("Setting mat to transparent");
-            ren.material = transparent;
-        }
-        else
-        {
-            Debug.Log("Setting mat to norm");
-            ren.material = normal;
-        }
-        isTransparent = !isTransparent;
     }
 }
