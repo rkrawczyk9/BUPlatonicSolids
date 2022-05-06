@@ -113,6 +113,38 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""DragX"",
+                    ""type"": ""Value"",
+                    ""id"": ""5e73da81-33d5-4981-b8e3-72acddf88e9d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""DragY"",
+                    ""type"": ""Value"",
+                    ""id"": ""0e275330-b513-47a7-bcd0-d7bf14472bb4"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pan"",
+                    ""type"": ""Value"",
+                    ""id"": ""3c12f90e-41c1-4d4f-bc88-77402af2988f"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""LMBDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""031e8b14-06e4-4936-84ff-8795e135d6ee"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -399,6 +431,50 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""F"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fc23e586-d96e-48ef-bd46-a80d7f59e356"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DragX"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2ffe784-85e4-40f9-86e5-505b94563a0b"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Pan"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be24d4a9-1b19-49f1-aea1-fc917e8a5aa1"",
+                    ""path"": ""<Mouse>/delta/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DragY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9af438de-a4f5-4367-8849-530546b142ab"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""LMBDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -988,6 +1064,10 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         m_Player_Delete = m_Player.FindAction("Delete", throwIfNotFound: true);
         m_Player_Escape = m_Player.FindAction("Escape", throwIfNotFound: true);
         m_Player_F = m_Player.FindAction("F", throwIfNotFound: true);
+        m_Player_DragX = m_Player.FindAction("DragX", throwIfNotFound: true);
+        m_Player_DragY = m_Player.FindAction("DragY", throwIfNotFound: true);
+        m_Player_Pan = m_Player.FindAction("Pan", throwIfNotFound: true);
+        m_Player_LMBDown = m_Player.FindAction("LMBDown", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1061,6 +1141,10 @@ public class @GameplayControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Delete;
     private readonly InputAction m_Player_Escape;
     private readonly InputAction m_Player_F;
+    private readonly InputAction m_Player_DragX;
+    private readonly InputAction m_Player_DragY;
+    private readonly InputAction m_Player_Pan;
+    private readonly InputAction m_Player_LMBDown;
     public struct PlayerActions
     {
         private @GameplayControls m_Wrapper;
@@ -1077,6 +1161,10 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         public InputAction @Delete => m_Wrapper.m_Player_Delete;
         public InputAction @Escape => m_Wrapper.m_Player_Escape;
         public InputAction @F => m_Wrapper.m_Player_F;
+        public InputAction @DragX => m_Wrapper.m_Player_DragX;
+        public InputAction @DragY => m_Wrapper.m_Player_DragY;
+        public InputAction @Pan => m_Wrapper.m_Player_Pan;
+        public InputAction @LMBDown => m_Wrapper.m_Player_LMBDown;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1122,6 +1210,18 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @F.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnF;
                 @F.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnF;
                 @F.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnF;
+                @DragX.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDragX;
+                @DragX.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDragX;
+                @DragX.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDragX;
+                @DragY.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDragY;
+                @DragY.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDragY;
+                @DragY.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDragY;
+                @Pan.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPan;
+                @Pan.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPan;
+                @Pan.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPan;
+                @LMBDown.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLMBDown;
+                @LMBDown.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLMBDown;
+                @LMBDown.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLMBDown;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1162,6 +1262,18 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @F.started += instance.OnF;
                 @F.performed += instance.OnF;
                 @F.canceled += instance.OnF;
+                @DragX.started += instance.OnDragX;
+                @DragX.performed += instance.OnDragX;
+                @DragX.canceled += instance.OnDragX;
+                @DragY.started += instance.OnDragY;
+                @DragY.performed += instance.OnDragY;
+                @DragY.canceled += instance.OnDragY;
+                @Pan.started += instance.OnPan;
+                @Pan.performed += instance.OnPan;
+                @Pan.canceled += instance.OnPan;
+                @LMBDown.started += instance.OnLMBDown;
+                @LMBDown.performed += instance.OnLMBDown;
+                @LMBDown.canceled += instance.OnLMBDown;
             }
         }
     }
@@ -1330,6 +1442,10 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         void OnDelete(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
         void OnF(InputAction.CallbackContext context);
+        void OnDragX(InputAction.CallbackContext context);
+        void OnDragY(InputAction.CallbackContext context);
+        void OnPan(InputAction.CallbackContext context);
+        void OnLMBDown(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

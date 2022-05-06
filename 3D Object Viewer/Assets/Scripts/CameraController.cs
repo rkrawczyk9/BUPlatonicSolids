@@ -28,16 +28,25 @@ public class CameraController : MonoBehaviour
     GameplayControls controller;
 
     InputAction movement;
+    InputAction pan;
     InputAction rising;
     InputAction rotateY;
+    InputAction dragX;
+    InputAction dragY;
     InputAction tilt;
     InputAction zoom;
+    InputAction lmbDown;
 
     private bool isRotating = false;
+    private bool isDraggingX = false;
+    private bool isDraggingY = false;
     private bool isMoving = false;
+    private bool isPanning = false;
     private bool isRising = false;
     private bool isTilting = false;
     private bool isZoooming = false;
+    private bool isClicking = false;
+
 
     private void Start()
     {
@@ -52,6 +61,14 @@ public class CameraController : MonoBehaviour
         rotateY.started += ctx => isRotating = true;
         rotateY.canceled += ctx => isRotating = false;
 
+        dragX = controller.Player.DragX;
+        dragX.started += ctx => isDraggingX = true;
+        dragX.canceled += ctx => isDraggingX = false;
+
+        dragY = controller.Player.DragY;
+        dragY.started += ctx => isDraggingY = true;
+        dragY.canceled += ctx => isDraggingY = false;
+
         tilt = controller.Player.Tilt;
         tilt.started += ctx => isTilting = true;
         tilt.canceled += ctx => isTilting = false;
@@ -59,6 +76,10 @@ public class CameraController : MonoBehaviour
         movement = controller.Player.Move;
         movement.started += ctx => isMoving = true;
         movement.canceled += ctx => isMoving = false;
+
+        pan = controller.Player.Pan;
+        pan.started += ctx => isPanning = true;
+        pan.canceled += ctx => isPanning = false;
 
         rising = controller.Player.Raise;
         rising.started += ctx => isRising = true;
@@ -68,25 +89,33 @@ public class CameraController : MonoBehaviour
         zoom.started += ctx => isZoooming = true;
         zoom.canceled += ctx => isZoooming = false;
 
+        lmbDown = controller.Player.LMBDown;
+        lmbDown.started += ctx => isClicking = true;
+        lmbDown.canceled += ctx => isClicking = false;
+
         rotateY.Enable();
+        dragX.Enable();
+        dragY.Enable();
         tilt.Enable();
         movement.Enable();
+        pan.Enable();
         rising.Enable();
         zoom.Enable();
+        lmbDown.Enable();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(isRotating)
+        if(isRotating || (isClicking && (isDraggingX)))
         {
             RotateCamera();
         }
-        if(isTilting)
+        if(isTilting || (isClicking && (isDraggingY)))
         {
             TiltCamera();
         }
-        if(isMoving || isRising)
+        if(isMoving || isRising || (isPanning && (isDraggingX || isDraggingY)))
         {
             MoveCamera();
         }
@@ -98,79 +127,40 @@ public class CameraController : MonoBehaviour
 
     private void MoveCamera()
     {
-        Vector2 direction = movement.ReadValue<Vector2>();
-        float raise = rising.ReadValue<float>();
+        float moveSide = movement.ReadValue<Vector2>().x + dragX.ReadValue<float>();
+        float moveForward = movement.ReadValue<Vector2>().y;
+        float moveUp = rising.ReadValue<float>() + dragY.ReadValue<float>();
+        print($"side: {moveSide}\t\tforward: {moveForward}\t\tup: {moveUp}");
 
-        // left and right
-        if (direction.x < 0)
-        {
-            pivot.transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
-            currentLocation = pivot.transform.position;
-        }
-        else if (direction.x > 0)
-        {
-            pivot.transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
-            currentLocation = pivot.transform.position;
-        }
+        // right and left
+        pivot.transform.Translate(Vector3.right * moveSide * moveSpeed * moveSpeedMultiplier * Time.deltaTime);
+        currentLocation = pivot.transform.position;
 
         // back and forward
-        if(direction.y < 0)
-        {
-            pivot.transform.Translate(Vector3.back * moveSpeed * Time.deltaTime);
-            currentLocation = pivot.transform.position;
-        }
-        else if (direction.y > 0)
-        {
-            pivot.transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
-            currentLocation = pivot.transform.position;
-        }
+        pivot.transform.Translate(Vector3.forward * moveForward * moveSpeed * moveSpeedMultiplier * Time.deltaTime);
+        currentLocation = pivot.transform.position;
 
         // down and up
-        if(raise < 0)
-        {
-            pivot.transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
-            currentLocation = pivot.transform.position;
-        }
-        else if (raise > 0)
-        {
-            pivot.transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
-            currentLocation = pivot.transform.position;
-        }
+        pivot.transform.Translate(Vector3.up * moveUp * moveSpeed * moveSpeedMultiplier * Time.deltaTime);
+        currentLocation = pivot.transform.position;
     }
 
     private void RotateCamera()
     {
-        float direction = rotateY.ReadValue<float>();
+        float rotateAmount = rotateY.ReadValue<float>() + -dragX.ReadValue<float>();
         
-
-        if (direction < 0)
-        {
-            pivot.transform.Rotate(Vector3.up, -rotateSpeed);
-            currentRotation = pivot.transform.rotation.eulerAngles;
-        }
-        else if (direction > 0)
-        {
-            pivot.transform.Rotate(Vector3.up, rotateSpeed);
-            currentRotation = pivot.transform.rotation.eulerAngles;
-        }
-
-        
+        // rotating side to side
+        pivot.transform.Rotate(Vector3.up, rotateAmount * rotateSpeed * rotateSpeedMultiplier * Time.deltaTime);
+        currentRotation = pivot.transform.rotation.eulerAngles;
     }
 
-    private void TiltCamera()
+    private void TiltCamera() // pitch
     {
-        float direction = tilt.ReadValue<float>();
+        float tiltAmount = tilt.ReadValue<float>() + dragY.ReadValue<float>();
 
-        if (direction < 0)
-        {
-            cam.transform.Rotate(Vector3.right, -tiltSpeed);
-            currentTilt = cam.transform.rotation.eulerAngles;
-        }
-        else if (direction > 0)
-        {
-            cam.transform.Rotate(Vector3.right, tiltSpeed);
-            currentTilt = cam.transform.rotation.eulerAngles;
-        }
+        // rotating downwards and upwards
+        cam.transform.Rotate(Vector3.right, tiltAmount * tiltSpeed * Time.deltaTime);
+        currentTilt = cam.transform.rotation.eulerAngles;
     }
 
     private void ZoomCamera()
