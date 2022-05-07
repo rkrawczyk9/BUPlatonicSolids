@@ -183,7 +183,7 @@ public class CameraController : MonoBehaviour
 
     private void ZoomCamera()
     {
-        Vector2 direction = zoom.ReadValue<Vector2>();
+        Vector2 direction = -zoom.ReadValue<Vector2>();
 
         if(direction.y < 0 && currentZoom < closeZoom)
         {

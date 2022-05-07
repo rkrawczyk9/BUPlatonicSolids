@@ -988,10 +988,10 @@ MonoBehaviour:
   rotateSpeed: 60
   rotateSpeedMultiplier: 6
   tiltSpeed: 60
-  tiltBounds: {x: -90, y: 90}
-  zoomSpeed: 500
-  closeZoom: -10
-  farZoom: -40
+  tiltBounds: {x: -89, y: 89}
+  zoomSpeed: 1000
+  closeZoom: -5
+  farZoom: -1000
   cam: {fileID: 941380575}
   pivot: {fileID: 1472724222}
 --- !u!114 &941380580
