@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align: center;">
+    <h1>Upload Your Own Face Matrix</h1>
+
+    <form action="/uploadmatrix" method="POST" enctype="multipart/form-data">
+
+        <label for = "vertArr">Enter the list of Vertices separated by commas:</label><br>
+        <input type = "text" name = "vertArr" id = "vertArr" required><br>
+        <p>Upload Face Matrix as CSV</p>
+        <input type="file" class="custom-file-input" name="faceMatrix" id="faceMatrix" required><br>
+
+        <br><input type = "submit" class = "file_submit">
+    </form>
+    <p>{{message}}</p>
+    {% if isSol %}
+    <h3 style="color: rgb(0, 255, 0);">It is a solution</h3>
+    {% elif not isSol %}
+    <h3 style="color: rgb(255, 0, 0);">Not a solution </h3>
+    {% endif %}
+    <a href="https://solution-checker.herokuapp.com/">Use an existing one</a>
+</body>
+</html>
