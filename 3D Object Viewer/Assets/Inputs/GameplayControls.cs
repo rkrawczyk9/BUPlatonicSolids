@@ -1074,12 +1074,11 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
         m_Player_Link = m_Player.FindAction("Link", throwIfNotFound: true);
         m_Player_Escape = m_Player.FindAction("Escape", throwIfNotFound: true);
-        m_Player_F = m_Player.FindAction("F", throwIfNotFound: true);
+        m_Player_Clear = m_Player.FindAction("Clear", throwIfNotFound: true);
         m_Player_DragX = m_Player.FindAction("DragX", throwIfNotFound: true);
         m_Player_DragY = m_Player.FindAction("DragY", throwIfNotFound: true);
         m_Player_Pan = m_Player.FindAction("Pan", throwIfNotFound: true);
         m_Player_LMBDown = m_Player.FindAction("LMBDown", throwIfNotFound: true);
-        m_Player_Clear = m_Player.FindAction("Clear", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1152,12 +1151,11 @@ public class @GameplayControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Shift;
     private readonly InputAction m_Player_Link;
     private readonly InputAction m_Player_Escape;
-    private readonly InputAction m_Player_F;
+    private readonly InputAction m_Player_Clear;
     private readonly InputAction m_Player_DragX;
     private readonly InputAction m_Player_DragY;
     private readonly InputAction m_Player_Pan;
     private readonly InputAction m_Player_LMBDown;
-    private readonly InputAction m_Player_Clear;
     public struct PlayerActions
     {
         private @GameplayControls m_Wrapper;
@@ -1173,12 +1171,11 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         public InputAction @Shift => m_Wrapper.m_Player_Shift;
         public InputAction @Link => m_Wrapper.m_Player_Link;
         public InputAction @Escape => m_Wrapper.m_Player_Escape;
-        public InputAction @F => m_Wrapper.m_Player_F;
+        public InputAction @Clear => m_Wrapper.m_Player_Clear;
         public InputAction @DragX => m_Wrapper.m_Player_DragX;
         public InputAction @DragY => m_Wrapper.m_Player_DragY;
         public InputAction @Pan => m_Wrapper.m_Player_Pan;
         public InputAction @LMBDown => m_Wrapper.m_Player_LMBDown;
-        public InputAction @Clear => m_Wrapper.m_Player_Clear;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1221,9 +1218,9 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Escape.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEscape;
                 @Escape.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEscape;
                 @Escape.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEscape;
-                @F.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnF;
-                @F.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnF;
-                @F.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnF;
+                @Clear.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClear;
+                @Clear.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClear;
+                @Clear.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClear;
                 @DragX.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDragX;
                 @DragX.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDragX;
                 @DragX.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDragX;
@@ -1236,9 +1233,6 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @LMBDown.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLMBDown;
                 @LMBDown.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLMBDown;
                 @LMBDown.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLMBDown;
-                @Clear.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClear;
-                @Clear.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClear;
-                @Clear.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClear;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1276,9 +1270,9 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Escape.started += instance.OnEscape;
                 @Escape.performed += instance.OnEscape;
                 @Escape.canceled += instance.OnEscape;
-                @F.started += instance.OnF;
-                @F.performed += instance.OnF;
-                @F.canceled += instance.OnF;
+                @Clear.started += instance.OnClear;
+                @Clear.performed += instance.OnClear;
+                @Clear.canceled += instance.OnClear;
                 @DragX.started += instance.OnDragX;
                 @DragX.performed += instance.OnDragX;
                 @DragX.canceled += instance.OnDragX;
@@ -1291,9 +1285,6 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @LMBDown.started += instance.OnLMBDown;
                 @LMBDown.performed += instance.OnLMBDown;
                 @LMBDown.canceled += instance.OnLMBDown;
-                @Clear.started += instance.OnClear;
-                @Clear.performed += instance.OnClear;
-                @Clear.canceled += instance.OnClear;
             }
         }
     }
@@ -1461,12 +1452,11 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         void OnShift(InputAction.CallbackContext context);
         void OnLink(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
-        void OnF(InputAction.CallbackContext context);
+        void OnClear(InputAction.CallbackContext context);
         void OnDragX(InputAction.CallbackContext context);
         void OnDragY(InputAction.CallbackContext context);
         void OnPan(InputAction.CallbackContext context);
         void OnLMBDown(InputAction.CallbackContext context);
-        void OnClear(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

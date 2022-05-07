@@ -148,30 +148,37 @@ public class CameraController : MonoBehaviour
 
     private void RotateCamera()
     {
-        float rotateAmount = rotateY.ReadValue<float>() + -dragX.ReadValue<float>();
+        float rotateAmount = rotateY.ReadValue<float>() + -dragX.ReadValue<float>()/3;
         
         // rotating side to side
         pivot.transform.Rotate(Vector3.up, rotateAmount * rotateSpeed * rotateSpeedMultiplier * Time.deltaTime);
         currentRotation = pivot.transform.rotation.eulerAngles;
+
+        // zero Z rotation
+        pivot.transform.rotation = Quaternion.Euler(pivot.transform.rotation.eulerAngles.x, pivot.transform.rotation.eulerAngles.y, 0);
     }
 
     private void TiltCamera() // pitch
     {
-        float tiltAmount = tilt.ReadValue<float>() + dragY.ReadValue<float>();
+        float tiltInput = tilt.ReadValue<float>() + dragY.ReadValue<float>()/3;
+        print($"tiltInput = {tiltInput}, current tilt = {currentTilt}");
+        // rotating downwards and upwards
+        float tiltAmount = (tiltInput * tiltSpeed * Time.deltaTime);
 
-        // Tilt upwards
-        if (direction < 0 && currentTilt > tiltBounds.y)
+        float newTilt = currentTilt + tiltAmount;
+        if(newTilt > tiltBounds.x && newTilt < tiltBounds.y)
         {
-            cam.transform.Rotate(Vector3.right, -tiltSpeed);
-            currentTilt -= tiltSpeed;
+            print($"new tilt {newTilt} accepted");
+            pivot.transform.Rotate(Vector3.right, tiltAmount);
+            currentTilt += tiltAmount;
+
+            // zero Z rotation
+            pivot.transform.rotation = Quaternion.Euler(pivot.transform.rotation.eulerAngles.x, pivot.transform.rotation.eulerAngles.y, 0);
         }
-        // Tilt downwards
-        else if (direction > 0 && currentTilt < tiltBounds.x)
+        else
         {
-            cam.transform.Rotate(Vector3.right, tiltSpeed);
-            currentTilt += tiltSpeed;
+            print($"new tilt {newTilt} denied");
         }
-        
     }
 
     private void ZoomCamera()

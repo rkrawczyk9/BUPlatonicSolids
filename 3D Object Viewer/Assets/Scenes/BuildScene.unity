@@ -987,8 +987,8 @@ MonoBehaviour:
   moveSpeedMultiplier: 5
   rotateSpeed: 60
   rotateSpeedMultiplier: 6
-  tiltSpeed: 0.08
-  tiltBounds: {x: 90, y: -90}
+  tiltSpeed: 60
+  tiltBounds: {x: -90, y: 90}
   zoomSpeed: 500
   closeZoom: -10
   farZoom: -40
