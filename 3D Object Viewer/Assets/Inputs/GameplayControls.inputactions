@@ -46,6 +46,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "MousePos",
+                    "type": "Value",
+                    "id": "94062200-bab6-47ee-8858-f8ed2ac132d1",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Select",
                     "type": "PassThrough",
                     "id": "cbd3379a-a7ad-4dcb-9e70-6556bf987f1f",
@@ -54,10 +62,10 @@
                     "interactions": ""
                 },
                 {
-                    "name": "MousePos",
-                    "type": "Value",
-                    "id": "94062200-bab6-47ee-8858-f8ed2ac132d1",
-                    "expectedControlType": "Vector2",
+                    "name": "RightClick",
+                    "type": "PassThrough",
+                    "id": "20f83a29-6998-4f16-a0af-fa36b9b1c36d",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": ""
                 },
@@ -78,14 +86,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Delete",
-                    "type": "PassThrough",
-                    "id": "20f83a29-6998-4f16-a0af-fa36b9b1c36d",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Escape",
                     "type": "Button",
                     "id": "39b30e76-95b7-4ebc-b699-fc7009dbf2d3",
@@ -94,9 +94,9 @@
                     "interactions": ""
                 },
                 {
-                    "name": "F",
+                    "name": "Clear",
                     "type": "Button",
-                    "id": "88f20d36-d16f-4ee0-bb90-8309e834b304",
+                    "id": "4208ee05-5b10-4d6f-a43c-f333839ab284",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -346,28 +346,6 @@
                 },
                 {
                     "name": "",
-                    "id": "755acb07-614a-40e4-9666-e5c3ccb5e23e",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cee4acaa-5470-4b04-986c-0af1572252c7",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MousePos",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "e74a9957-bbaa-4962-9e19-3c9f8d0799e8",
                     "path": "<Keyboard>/shift",
                     "interactions": "",
@@ -390,17 +368,6 @@
                 },
                 {
                     "name": "",
-                    "id": "1dd31346-7afd-445d-85f8-60a94819568e",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Delete",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "5189d82c-2daf-42e8-b653-cdbe5f5cdebf",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
@@ -412,12 +379,56 @@
                 },
                 {
                     "name": "",
-                    "id": "a3666bea-3899-49ef-8fe0-ad662cfc8f9b",
-                    "path": "<Keyboard>/f",
+                    "id": "23bbd527-89cc-4399-a900-701eaf618fab",
+                    "path": "<Keyboard>/delete",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "F",
+                    "action": "Clear",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8244302-ab5c-49c3-964f-2a72cf896894",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Clear",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "755acb07-614a-40e4-9666-e5c3ccb5e23e",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cee4acaa-5470-4b04-986c-0af1572252c7",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MousePos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1dd31346-7afd-445d-85f8-60a94819568e",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -59,6 +59,14 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""MousePos"",
+                    ""type"": ""Value"",
+                    ""id"": ""94062200-bab6-47ee-8858-f8ed2ac132d1"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""Select"",
                     ""type"": ""PassThrough"",
                     ""id"": ""cbd3379a-a7ad-4dcb-9e70-6556bf987f1f"",
@@ -67,10 +75,10 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""MousePos"",
-                    ""type"": ""Value"",
-                    ""id"": ""94062200-bab6-47ee-8858-f8ed2ac132d1"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""name"": ""RightClick"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""20f83a29-6998-4f16-a0af-fa36b9b1c36d"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
@@ -91,14 +99,6 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Delete"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""20f83a29-6998-4f16-a0af-fa36b9b1c36d"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Escape"",
                     ""type"": ""Button"",
                     ""id"": ""39b30e76-95b7-4ebc-b699-fc7009dbf2d3"",
@@ -107,9 +107,9 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""F"",
+                    ""name"": ""Clear"",
                     ""type"": ""Button"",
-                    ""id"": ""88f20d36-d16f-4ee0-bb90-8309e834b304"",
+                    ""id"": ""4208ee05-5b10-4d6f-a43c-f333839ab284"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -359,28 +359,6 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""755acb07-614a-40e4-9666-e5c3ccb5e23e"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Select"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""cee4acaa-5470-4b04-986c-0af1572252c7"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MousePos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""e74a9957-bbaa-4962-9e19-3c9f8d0799e8"",
                     ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
@@ -403,17 +381,6 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1dd31346-7afd-445d-85f8-60a94819568e"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": ""Press"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Delete"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""5189d82c-2daf-42e8-b653-cdbe5f5cdebf"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
@@ -425,12 +392,56 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a3666bea-3899-49ef-8fe0-ad662cfc8f9b"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""id"": ""23bbd527-89cc-4399-a900-701eaf618fab"",
+                    ""path"": ""<Keyboard>/delete"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""F"",
+                    ""action"": ""Clear"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8244302-ab5c-49c3-964f-2a72cf896894"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Clear"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""755acb07-614a-40e4-9666-e5c3ccb5e23e"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cee4acaa-5470-4b04-986c-0af1572252c7"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1dd31346-7afd-445d-85f8-60a94819568e"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1057,17 +1068,18 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         m_Player_Raise = m_Player.FindAction("Raise", throwIfNotFound: true);
         m_Player_Tilt = m_Player.FindAction("Tilt", throwIfNotFound: true);
         m_Player_Zoom = m_Player.FindAction("Zoom", throwIfNotFound: true);
-        m_Player_Select = m_Player.FindAction("Select", throwIfNotFound: true);
         m_Player_MousePos = m_Player.FindAction("MousePos", throwIfNotFound: true);
+        m_Player_Select = m_Player.FindAction("Select", throwIfNotFound: true);
+        m_Player_RightClick = m_Player.FindAction("RightClick", throwIfNotFound: true);
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
         m_Player_Link = m_Player.FindAction("Link", throwIfNotFound: true);
-        m_Player_Delete = m_Player.FindAction("Delete", throwIfNotFound: true);
         m_Player_Escape = m_Player.FindAction("Escape", throwIfNotFound: true);
         m_Player_F = m_Player.FindAction("F", throwIfNotFound: true);
         m_Player_DragX = m_Player.FindAction("DragX", throwIfNotFound: true);
         m_Player_DragY = m_Player.FindAction("DragY", throwIfNotFound: true);
         m_Player_Pan = m_Player.FindAction("Pan", throwIfNotFound: true);
         m_Player_LMBDown = m_Player.FindAction("LMBDown", throwIfNotFound: true);
+        m_Player_Clear = m_Player.FindAction("Clear", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1134,17 +1146,18 @@ public class @GameplayControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Raise;
     private readonly InputAction m_Player_Tilt;
     private readonly InputAction m_Player_Zoom;
-    private readonly InputAction m_Player_Select;
     private readonly InputAction m_Player_MousePos;
+    private readonly InputAction m_Player_Select;
+    private readonly InputAction m_Player_RightClick;
     private readonly InputAction m_Player_Shift;
     private readonly InputAction m_Player_Link;
-    private readonly InputAction m_Player_Delete;
     private readonly InputAction m_Player_Escape;
     private readonly InputAction m_Player_F;
     private readonly InputAction m_Player_DragX;
     private readonly InputAction m_Player_DragY;
     private readonly InputAction m_Player_Pan;
     private readonly InputAction m_Player_LMBDown;
+    private readonly InputAction m_Player_Clear;
     public struct PlayerActions
     {
         private @GameplayControls m_Wrapper;
@@ -1154,17 +1167,18 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         public InputAction @Raise => m_Wrapper.m_Player_Raise;
         public InputAction @Tilt => m_Wrapper.m_Player_Tilt;
         public InputAction @Zoom => m_Wrapper.m_Player_Zoom;
-        public InputAction @Select => m_Wrapper.m_Player_Select;
         public InputAction @MousePos => m_Wrapper.m_Player_MousePos;
+        public InputAction @Select => m_Wrapper.m_Player_Select;
+        public InputAction @RightClick => m_Wrapper.m_Player_RightClick;
         public InputAction @Shift => m_Wrapper.m_Player_Shift;
         public InputAction @Link => m_Wrapper.m_Player_Link;
-        public InputAction @Delete => m_Wrapper.m_Player_Delete;
         public InputAction @Escape => m_Wrapper.m_Player_Escape;
         public InputAction @F => m_Wrapper.m_Player_F;
         public InputAction @DragX => m_Wrapper.m_Player_DragX;
         public InputAction @DragY => m_Wrapper.m_Player_DragY;
         public InputAction @Pan => m_Wrapper.m_Player_Pan;
         public InputAction @LMBDown => m_Wrapper.m_Player_LMBDown;
+        public InputAction @Clear => m_Wrapper.m_Player_Clear;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1189,21 +1203,21 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Zoom.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnZoom;
                 @Zoom.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnZoom;
                 @Zoom.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnZoom;
-                @Select.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSelect;
-                @Select.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSelect;
-                @Select.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSelect;
                 @MousePos.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePos;
                 @MousePos.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePos;
                 @MousePos.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePos;
+                @Select.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSelect;
+                @Select.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSelect;
+                @Select.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSelect;
+                @RightClick.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRightClick;
+                @RightClick.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRightClick;
+                @RightClick.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRightClick;
                 @Shift.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
                 @Shift.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
                 @Shift.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
                 @Link.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLink;
                 @Link.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLink;
                 @Link.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLink;
-                @Delete.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDelete;
-                @Delete.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDelete;
-                @Delete.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDelete;
                 @Escape.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEscape;
                 @Escape.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEscape;
                 @Escape.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEscape;
@@ -1222,6 +1236,9 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @LMBDown.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLMBDown;
                 @LMBDown.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLMBDown;
                 @LMBDown.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLMBDown;
+                @Clear.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClear;
+                @Clear.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClear;
+                @Clear.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClear;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1241,21 +1258,21 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
-                @Select.started += instance.OnSelect;
-                @Select.performed += instance.OnSelect;
-                @Select.canceled += instance.OnSelect;
                 @MousePos.started += instance.OnMousePos;
                 @MousePos.performed += instance.OnMousePos;
                 @MousePos.canceled += instance.OnMousePos;
+                @Select.started += instance.OnSelect;
+                @Select.performed += instance.OnSelect;
+                @Select.canceled += instance.OnSelect;
+                @RightClick.started += instance.OnRightClick;
+                @RightClick.performed += instance.OnRightClick;
+                @RightClick.canceled += instance.OnRightClick;
                 @Shift.started += instance.OnShift;
                 @Shift.performed += instance.OnShift;
                 @Shift.canceled += instance.OnShift;
                 @Link.started += instance.OnLink;
                 @Link.performed += instance.OnLink;
                 @Link.canceled += instance.OnLink;
-                @Delete.started += instance.OnDelete;
-                @Delete.performed += instance.OnDelete;
-                @Delete.canceled += instance.OnDelete;
                 @Escape.started += instance.OnEscape;
                 @Escape.performed += instance.OnEscape;
                 @Escape.canceled += instance.OnEscape;
@@ -1274,6 +1291,9 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @LMBDown.started += instance.OnLMBDown;
                 @LMBDown.performed += instance.OnLMBDown;
                 @LMBDown.canceled += instance.OnLMBDown;
+                @Clear.started += instance.OnClear;
+                @Clear.performed += instance.OnClear;
+                @Clear.canceled += instance.OnClear;
             }
         }
     }
@@ -1435,17 +1455,18 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         void OnRaise(InputAction.CallbackContext context);
         void OnTilt(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
-        void OnSelect(InputAction.CallbackContext context);
         void OnMousePos(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
+        void OnRightClick(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
         void OnLink(InputAction.CallbackContext context);
-        void OnDelete(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
         void OnF(InputAction.CallbackContext context);
         void OnDragX(InputAction.CallbackContext context);
         void OnDragY(InputAction.CallbackContext context);
         void OnPan(InputAction.CallbackContext context);
         void OnLMBDown(InputAction.CallbackContext context);
+        void OnClear(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
