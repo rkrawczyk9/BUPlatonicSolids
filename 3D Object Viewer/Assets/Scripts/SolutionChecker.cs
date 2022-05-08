@@ -6,9 +6,6 @@ public class SolutionChecker : MonoBehaviour
 {
     [SerializeField] UIManager uiManager;
 
-    bool _transparencyOn = false; // must be same as starting value as 'isTransparent' in Face.cs
-    public bool transparencyOn => _transparencyOn; // getter
-
     private List<Face> faces;
     private List<Face> missingFaces;
     private List<Node> claimedNodes;
@@ -36,6 +33,10 @@ public class SolutionChecker : MonoBehaviour
         CheckNodes();
     }
 
+    /// <summary>
+    /// Check all faces to see if solution
+    /// </summary>
+    /// <returns></returns>
     private bool CheckFaces()
     {
         Face[] temp = FindObjectsOfType<Face>();
@@ -58,19 +59,10 @@ public class SolutionChecker : MonoBehaviour
 
         return missingFaces.Count <= 0;
     }
-    
-    public void ToggleFaceMat()
-    {
-        Face[] temp = FindObjectsOfType<Face>();
-        Debug.Log("Faces found: " + temp.Length);
 
-        foreach (Face obj in temp)
-        {
-            obj.ToggleTransparency();
-        }
-        _transparencyOn = !_transparencyOn;
-    }
-
+    /// <summary>
+    /// Check which nodes are currently claimed
+    /// </summary>
     private void CheckNodes()
     {
         GameObject[] temp = FindObjectsOfType<GameObject>();
@@ -84,11 +76,11 @@ public class SolutionChecker : MonoBehaviour
                 claimedNodes.Add(obj.GetComponent<Node>());
             }
         }
-
-        Debug.Log("Currently claimed nodes:");
-        foreach(Node node in claimedNodes)
+        string sol = "Claimed Nodes: ";
+        foreach(Node obj in claimedNodes)
         {
-            Debug.Log(node.id);
+            sol += obj.id + ", ";
         }
+        Debug.Log(sol);
     }
 }

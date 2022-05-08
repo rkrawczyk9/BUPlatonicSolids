@@ -9,9 +9,6 @@ public class SelectionSystem : MonoBehaviour
     [SerializeField] private GameObject facePrefab;
     [Tooltip("Material to use when an object is selected")]
     [SerializeField] private Material selectedMaterial;
-    [SerializeField] SolutionChecker solutionChecker;
-    [SerializeField] LayerMask ignoreWhileTransparent = 1 << 6;
-    [SerializeField] LayerMask ignoreWhileNotTransparent = 0;
 
     /// <summary>
     /// all currently selected gameobjects
@@ -91,7 +88,7 @@ public class SelectionSystem : MonoBehaviour
             ClearSelection();
         }
 
-        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity, GetCurrLayerMask()))
+        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
         {
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
@@ -127,9 +124,7 @@ public class SelectionSystem : MonoBehaviour
         // Toggle node claim if not shift, delete if shift. 
         if(!shiftMod)
         {
-            //TrySelect();
             ClaimNode();
-            //ClearSelection();
         }
         else
         {
@@ -145,7 +140,7 @@ public class SelectionSystem : MonoBehaviour
         RaycastHit hitInfo;
         Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
 
-        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity, GetCurrLayerMask()))
+        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
         {
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
@@ -167,7 +162,7 @@ public class SelectionSystem : MonoBehaviour
         RaycastHit hitInfo;
         Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
 
-        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity, GetCurrLayerMask()))
+        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
         {
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
@@ -215,8 +210,20 @@ public class SelectionSystem : MonoBehaviour
     /// </summary>
     public void SpawnFace()
     {
-        GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0), null);
-        newFace.GetComponent<Face>().SpawnFace(selectedObjects);
+        // Filter out the faces in selection, otherwise this breaks
+        List<GameObject> temp = new List<GameObject>();
+        foreach (GameObject obj in selectedObjects)
+        {
+            if (obj.CompareTag("Node"))
+                temp.Add(obj);
+        }
+
+        GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        newFace.GetComponent<Face>().SpawnFace(temp);
+
+        // IF faces are transparent, then make it transparent as well
+        if (FindObjectOfType<TransparencyController>().Transparent)
+            newFace.GetComponent<Face>().ToggleTransparency();
     }
 
     /// <summary>
@@ -227,12 +234,5 @@ public class SelectionSystem : MonoBehaviour
     {
         GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0), parent);
         newFace.GetComponent<Face>().SpawnFace(nodes);
-    }
-
-    LayerMask GetCurrLayerMask()
-    {
-        print($"curr layer mask = {(solutionChecker.transparencyOn ? ~ignoreWhileTransparent : ~ignoreWhileNotTransparent)}");
-        // Decide if we can raycast through faces
-        return solutionChecker.transparencyOn ? ~ignoreWhileTransparent : ~ignoreWhileNotTransparent;
     }
 }

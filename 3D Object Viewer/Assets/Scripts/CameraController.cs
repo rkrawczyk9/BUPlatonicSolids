@@ -8,9 +8,9 @@ using UnityEngine.InputSystem.Utilities;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float moveSpeedMultiplier;
+    //[SerializeField] private float moveSpeedMultiplier;
     [SerializeField] private float rotateSpeed;
-    [SerializeField] private float rotateSpeedMultiplier;
+    //[SerializeField] private float rotateSpeedMultiplier;
     [SerializeField] private float tiltSpeed;
     [SerializeField] private Vector2 tiltBounds;
 
@@ -108,15 +108,17 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isRotating || (isClicking && (isDraggingX)))
+        if(isRotating)
         {
+            
             RotateCamera();
         }
-        if(isTilting || (isClicking && (isDraggingY)))
+        if(isTilting)
         {
+            
             TiltCamera();
         }
-        if(isMoving || isRising || (isPanning && (isDraggingX || isDraggingY)))
+        if(isMoving || isRising)
         {
             MoveCamera();
         }
@@ -128,50 +130,64 @@ public class CameraController : MonoBehaviour
 
     private void MoveCamera()
     {
-        float moveSide = movement.ReadValue<Vector2>().x + -dragX.ReadValue<float>();
+        Vector2 direction = movement.ReadValue<Vector2>();
+        float raise = rising.ReadValue<float>();
+
+
+
+        //This stuff doesn't work well. It doesn't keep the camera in the axis as intended and the camera movement with the mouse basically breaks it all
+        float moveSide = movement.ReadValue<Vector2>().x;
         float moveForward = movement.ReadValue<Vector2>().y;
-        float moveUp = rising.ReadValue<float>() + -dragY.ReadValue<float>();
+        float moveUp = rising.ReadValue<float>();
 
         // right and left
-        pivot.transform.Translate(Vector3.right * moveSide * moveSpeed * moveSpeedMultiplier * Time.deltaTime);
+        pivot.transform.Translate(Vector3.right * moveSide * moveSpeed * Time.deltaTime);
         currentLocation = pivot.transform.position;
 
         // back and forward
-        pivot.transform.Translate(Vector3.forward * moveForward * moveSpeed * moveSpeedMultiplier * Time.deltaTime);
+        pivot.transform.Translate(Vector3.forward * moveForward * moveSpeed * Time.deltaTime);
         currentLocation = pivot.transform.position;
 
         // down and up
-        pivot.transform.Translate(Vector3.up * moveUp * moveSpeed * moveSpeedMultiplier * Time.deltaTime);
+        pivot.transform.Translate(Vector3.up * moveSpeed * moveUp * Time.deltaTime);
         currentLocation = pivot.transform.position;
     }
 
     private void RotateCamera()
     {
-        float rotateAmount = rotateY.ReadValue<float>() + dragX.ReadValue<float>()/3;
+        float direction = rotateY.ReadValue<float>();
         
-        // rotating side to side
-        pivot.transform.Rotate(Vector3.up, rotateAmount * rotateSpeed * rotateSpeedMultiplier * Time.deltaTime);
-        currentRotation = pivot.transform.rotation.eulerAngles;
-
-        // zero Z rotation
-        pivot.transform.rotation = Quaternion.Euler(pivot.transform.rotation.eulerAngles.x, pivot.transform.rotation.eulerAngles.y, 0);
+        if (direction < 0)
+        {
+            pivot.transform.Rotate(Vector3.up, -rotateSpeed);
+            currentRotation = pivot.transform.rotation.eulerAngles;
+        }
+        else if (direction > 0)
+        {
+            pivot.transform.Rotate(Vector3.up, rotateSpeed);
+            currentRotation = pivot.transform.rotation.eulerAngles;
+        }
     }
 
     private void TiltCamera() // pitch
     {
-        float tiltInput = tilt.ReadValue<float>() + -dragY.ReadValue<float>()/3;
-        // rotating downwards and upwards
-        float tiltAmount = (tiltInput * tiltSpeed * Time.deltaTime);
+        float direction = tilt.ReadValue<float>();
 
-        float newTilt = currentTilt + tiltAmount;
-        if(newTilt > tiltBounds.x && newTilt < tiltBounds.y)
+        // Tilt upwards
+        if (direction < 0 && currentTilt > tiltBounds.y)
         {
-            pivot.transform.Rotate(Vector3.right, tiltAmount);
-            currentTilt += tiltAmount;
-
-            // zero Z rotation
-            pivot.transform.rotation = Quaternion.Euler(pivot.transform.rotation.eulerAngles.x, pivot.transform.rotation.eulerAngles.y, 0);
+            Debug.Log("tilting up");
+            cam.transform.Rotate(Vector3.right, -tiltSpeed);
+            currentTilt -= tiltSpeed;
         }
+        // Tilt downwards
+        else if (direction > 0 && currentTilt < tiltBounds.x)
+        {
+            Debug.Log("tilting down");
+            cam.transform.Rotate(Vector3.right, tiltSpeed);
+            currentTilt += tiltSpeed;
+        }
+
     }
 
     private void ZoomCamera()

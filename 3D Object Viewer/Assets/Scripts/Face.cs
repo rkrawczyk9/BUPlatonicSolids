@@ -406,6 +406,8 @@ public class Face : IDeletable
     public void ToggleTransparency()
     {
         isTransparent = !isTransparent;
+        Collider col = GetComponent<Collider>();
+        col.enabled = !col.enabled;
     }
 
     #endregion
