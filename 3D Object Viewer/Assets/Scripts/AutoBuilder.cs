@@ -9,11 +9,17 @@ public class AutoBuilder : MonoBehaviour
     [SerializeField] SelectionSystem selectionSystem;
     [SerializeField] GameObject spawnTarget;
 
-    Dictionary<uint, Node> nodes;
+    // Settings
+    //public string pointsFilename = "hypercube coordinates", facesFilename = "hypercube faces";
+    public float sizeFactor = 10, fourthDimSizeOffset = 1, fourthDimSizeFactor = 1;
 
-    void Start()
+    Dictionary<uint, Node> nodes;
+    List<GameObject> roots_hypercube, roots_600cell;
+
+    void Awake()
     {
-        BuildFromFile("600CellVertexCoordinates", "600CellFacesMadeWithCoordinates", 10, 0, 1);
+        roots_hypercube = new List<GameObject>();
+        roots_600cell = new List<GameObject>();
     }
 
     void Update()
@@ -21,7 +27,42 @@ public class AutoBuilder : MonoBehaviour
         
     }
 
-    public void BuildFromFile(string points= "hypercube coordinates", string faces="hypercube faces", float sizeFactor=10, float fourthDimSizeOffset=1,float fourthDimSizeFactor=1)
+    public void Build600Cell()
+    {
+        GameObject root = new GameObject();
+        root.name = "Built 600-Cell";
+        roots_600cell.Add(root);
+        BuildFromFile("600CellVertexCoordinates", "600CellFacesMadeWithCoordinates", root.transform, sizeFactor, fourthDimSizeOffset, fourthDimSizeFactor);
+    }
+
+    // To be called from a button
+    public void BuildHypercube()
+    {
+        GameObject root = new GameObject();
+        root.name = "Built Hypercube";
+        roots_hypercube.Add(root);
+        BuildFromFile("hypercube coordinates", "hypercube faces", root.transform, sizeFactor, fourthDimSizeOffset, fourthDimSizeFactor);
+    }
+
+    public void DeleteHypercubes()
+    {
+        DeleteRoots(roots_hypercube);
+    }
+
+    public void Delete600Cells()
+    {
+        DeleteRoots(roots_600cell);
+    }
+
+    void DeleteRoots(List<GameObject> roots)
+    {
+        foreach(GameObject root in roots)
+        {
+            Destroy(root);
+        }
+    }
+
+    public void BuildFromFile(string points, string faces, Transform parent=null, float sizeFactor=10, float fourthDimSizeOffset=1,float fourthDimSizeFactor=1)
     {
         nodes = new Dictionary<uint, Node>();
 
@@ -65,7 +106,7 @@ public class AutoBuilder : MonoBehaviour
             {
                 continue;
             }
-            print($"Autobuilder: Creating vert at: {nextCoord}");
+            //print($"Autobuilder: Creating vert at: {nextCoord}");
 
             // Do stuff with coordinate
             // Modify coordinate for 4th dimension
@@ -73,7 +114,7 @@ public class AutoBuilder : MonoBehaviour
 
             // Spawn node
             spawnTarget.transform.position = sizeFactor * fourthDimScale * new Vector3(nextCoord[0], nextCoord[1], nextCoord[2]); // Throws out the fourth dimension
-            Node node = spawnManager.SpawnNode();
+            Node node = spawnManager.SpawnNode(parent);
             node.id = nextId;
             nodes[nextId] = node;
         }
@@ -96,8 +137,8 @@ public class AutoBuilder : MonoBehaviour
 
             // Do stuff with vert list
             // Spawn face
-            print($"Autobuilder: Creating face from verts: {ListToString(nextNodes)}");
-            selectionSystem.SpawnFace(nextNodes);
+            //print($"Autobuilder: Creating face from verts: {ListToString(nextNodes)}");
+            selectionSystem.SpawnFace(nextNodes, parent);
         }
     }
 

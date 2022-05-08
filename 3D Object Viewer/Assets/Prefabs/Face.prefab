@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 441027539312243225}
   - component: {fileID: 896600147304290302}
   - component: {fileID: 8936160226258254501}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Face
   m_TagString: Face
   m_Icon: {fileID: 0}
@@ -134,7 +134,6 @@ MonoBehaviour:
   transparentMat: {fileID: 2100000, guid: 56b8aeb5e1ac8514f8ac4d190f272aae, type: 2}
   borderMat: {fileID: 2100000, guid: 1d65cdddcfb782f4d8745d1455c9c911, type: 2}
   claimedBorderMat: {fileID: 2100000, guid: eedff2551ae7fbf498a5c1ebb2bcde48, type: 2}
-  borderThickness: {x: 0.1, y: 1}
 --- !u!120 &8936160226258254501
 LineRenderer:
   m_ObjectHideFlags: 0

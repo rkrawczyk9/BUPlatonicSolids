@@ -9,6 +9,9 @@ public class SelectionSystem : MonoBehaviour
     [SerializeField] private GameObject facePrefab;
     [Tooltip("Material to use when an object is selected")]
     [SerializeField] private Material selectedMaterial;
+    [SerializeField] SolutionChecker solutionChecker;
+    [SerializeField] LayerMask ignoreWhileTransparent = 1 << 6;
+    [SerializeField] LayerMask ignoreWhileNotTransparent = 0;
 
     /// <summary>
     /// all currently selected gameobjects
@@ -88,7 +91,10 @@ public class SelectionSystem : MonoBehaviour
             ClearSelection();
         }
 
-        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
+        // Decide if we can select through faces
+        bool xray = solutionChecker.transparencyOn;
+        LayerMask currLayerMask = xray ? ignoreWhileTransparent : ignoreWhileNotTransparent;
+        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))//, currLayerMask))
         {
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
@@ -200,7 +206,7 @@ public class SelectionSystem : MonoBehaviour
     /// </summary>
     public void SpawnFace()
     {
-        GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0), null);
         newFace.GetComponent<Face>().SpawnFace(selectedObjects);
     }
 
@@ -208,9 +214,9 @@ public class SelectionSystem : MonoBehaviour
     /// Spawn in the face between selected nodes. Used by autobuilder
     /// </summary>
     /// <param name="nodes">All nodes to be use when making the face</param>
-    public void SpawnFace(List<GameObject> nodes)
+    public void SpawnFace(List<GameObject> nodes, Transform parent = null)
     {
-        GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0), parent);
         newFace.GetComponent<Face>().SpawnFace(nodes);
     }
 }

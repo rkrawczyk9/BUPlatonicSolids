@@ -128,10 +128,9 @@ public class CameraController : MonoBehaviour
 
     private void MoveCamera()
     {
-        float moveSide = movement.ReadValue<Vector2>().x + dragX.ReadValue<float>();
+        float moveSide = movement.ReadValue<Vector2>().x + -dragX.ReadValue<float>();
         float moveForward = movement.ReadValue<Vector2>().y;
-        float moveUp = rising.ReadValue<float>() + dragY.ReadValue<float>();
-        print($"side: {moveSide}\t\tforward: {moveForward}\t\tup: {moveUp}");
+        float moveUp = rising.ReadValue<float>() + -dragY.ReadValue<float>();
 
         // right and left
         pivot.transform.Translate(Vector3.right * moveSide * moveSpeed * moveSpeedMultiplier * Time.deltaTime);
@@ -148,7 +147,7 @@ public class CameraController : MonoBehaviour
 
     private void RotateCamera()
     {
-        float rotateAmount = rotateY.ReadValue<float>() + -dragX.ReadValue<float>()/3;
+        float rotateAmount = rotateY.ReadValue<float>() + dragX.ReadValue<float>()/3;
         
         // rotating side to side
         pivot.transform.Rotate(Vector3.up, rotateAmount * rotateSpeed * rotateSpeedMultiplier * Time.deltaTime);
@@ -160,24 +159,18 @@ public class CameraController : MonoBehaviour
 
     private void TiltCamera() // pitch
     {
-        float tiltInput = tilt.ReadValue<float>() + dragY.ReadValue<float>()/3;
-        print($"tiltInput = {tiltInput}, current tilt = {currentTilt}");
+        float tiltInput = tilt.ReadValue<float>() + -dragY.ReadValue<float>()/3;
         // rotating downwards and upwards
         float tiltAmount = (tiltInput * tiltSpeed * Time.deltaTime);
 
         float newTilt = currentTilt + tiltAmount;
         if(newTilt > tiltBounds.x && newTilt < tiltBounds.y)
         {
-            print($"new tilt {newTilt} accepted");
             pivot.transform.Rotate(Vector3.right, tiltAmount);
             currentTilt += tiltAmount;
 
             // zero Z rotation
             pivot.transform.rotation = Quaternion.Euler(pivot.transform.rotation.eulerAngles.x, pivot.transform.rotation.eulerAngles.y, 0);
-        }
-        else
-        {
-            print($"new tilt {newTilt} denied");
         }
     }
 

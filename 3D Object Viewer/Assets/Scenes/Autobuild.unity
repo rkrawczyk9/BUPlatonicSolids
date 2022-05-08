@@ -399,7 +399,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ed2a1ae1d839e14db971201460054a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedObjects: []
   facePrefab: {fileID: 2692314793449138421, guid: 4aa9b702162fedc4a95fb0a23fb50295, type: 3}
   selectedMaterial: {fileID: 2100000, guid: 71e511ad2f71a4c47a5bc2b8d123b7af, type: 2}
 --- !u!114 &701266475
@@ -415,13 +414,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  moveSpeedMultiplier: 10
-  rotateSpeed: 0.15
-  rotateSpeedMultiplier: 6
-  tiltSpeed: 0.08
+  moveSpeedMultiplier: 1
+  rotateSpeed: 60
+  rotateSpeedMultiplier: 1
+  tiltSpeed: 60
+  tiltBounds: {x: -89, y: 89}
   zoomSpeed: 500
-  closeZoom: -10
-  farZoom: -40
+  closeZoom: -1
+  farZoom: -1000
   cam: {fileID: 701266470}
   pivot: {fileID: 107758806}
 --- !u!81 &701266476

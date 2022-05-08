@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class SolutionChecker : MonoBehaviour
 {
+    [SerializeField] UIManager uiManager;
+
+    bool _transparencyOn = true; // must be opposite of starting value as 'isTransparent' in Face.cs
+    public bool transparencyOn => _transparencyOn; // getter
+
     private List<Face> faces;
     private List<Face> missingFaces;
     private List<Node> claimedNodes;
@@ -20,10 +25,12 @@ public class SolutionChecker : MonoBehaviour
         if(CheckFaces())
         {
             Debug.Log("Solution!");
+            uiManager.IsSolution();
         }
         else
         {
             Debug.Log("Not a solution!");
+            uiManager.IsntSolution();
         }
 
         CheckNodes();
@@ -61,7 +68,7 @@ public class SolutionChecker : MonoBehaviour
         {
             obj.ToggleTransparency();
         }
-
+        _transparencyOn = !_transparencyOn;
     }
 
     private void CheckNodes()

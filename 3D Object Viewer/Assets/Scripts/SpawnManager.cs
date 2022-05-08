@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -23,10 +24,10 @@ public class SpawnManager : MonoBehaviour
     /// Used by the autobuild script
     /// </summary>
     /// <returns></returns>
-    public Node SpawnNode()
+    public Node SpawnNode(Transform parent=null)
     {
         //Debug.Log("Spawning Node");
-        Node newNode = Instantiate(node, spawnPos.transform.position, node.transform.rotation).GetComponent<Node>();
+        Node newNode = Instantiate(node, spawnPos.transform.position, node.transform.rotation, parent).GetComponent<Node>();
         newNode.id = GetID();
 
         return newNode;
@@ -69,5 +70,11 @@ public class SpawnManager : MonoBehaviour
     public void DeletedID(uint id)
     {
         availableIDs.Enqueue(id);
+    }
+
+    public void Clear()
+    {
+        // Reload for now lol
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
