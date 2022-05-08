@@ -121,6 +121,7 @@ public class AutoBuilder : MonoBehaviour
             spawnTarget.transform.position = sizeFactor * fourthDimScale * new Vector3(nextCoord[0], nextCoord[1], nextCoord[2]); // Throws out the fourth dimension
             Node node = spawnManager.SpawnNode(parent);
             node.id = nextId;
+            node.SetW(nextCoord[3]);
             nodes[nextId] = node;
         }
         // Reset spawn target position

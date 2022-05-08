@@ -63,7 +63,7 @@ public class MatrixGenerator : MonoBehaviour
     /// </summary>
     private void ExportMatrix()
     {
-        string path = Application.dataPath + "/Matrix.txt";
+        string path = Application.dataPath + "/Resources/Matrix.txt";
         //string path2 = Application.dataPath + "/JSON Test.json";
         if (!File.Exists(path))
         {

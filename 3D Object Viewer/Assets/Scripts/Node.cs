@@ -11,9 +11,8 @@ public class Node : IDeletable
     [SerializeField] private List<GameObject> linkedNodes = new List<GameObject>();
     [Tooltip("List of faces that this node is linked with")]
     [SerializeField] private List<GameObject> linkedFaces = new List<GameObject>();
-
-    [SerializeField] private uint gridScale;
-
+    // 4th dimension coord
+    public float _w = 0;
 
     /// <summary>
     /// Whether this node is claimed and assosiated faces should be too
@@ -37,6 +36,11 @@ public class Node : IDeletable
 
         ren = GetComponent<MeshRenderer>();
         tags = GetComponentsInChildren<TextMeshProUGUI>();
+    }
+
+    public void SetW(float w)
+    {
+        _w = w;
     }
 
     /// <summary>
