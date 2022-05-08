@@ -91,10 +91,7 @@ public class SelectionSystem : MonoBehaviour
             ClearSelection();
         }
 
-        // Decide if we can select through faces
-        bool xray = solutionChecker.transparencyOn;
-        LayerMask currLayerMask = xray ? ignoreWhileTransparent : ignoreWhileNotTransparent;
-        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))//, currLayerMask))
+        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity, GetCurrLayerMask()))
         {
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
@@ -130,9 +127,9 @@ public class SelectionSystem : MonoBehaviour
         // Toggle node claim if not shift, delete if shift. 
         if(!shiftMod)
         {
-            TrySelect();
+            //TrySelect();
             ClaimNode();
-            ClearSelection();
+            //ClearSelection();
         }
         else
         {
@@ -148,7 +145,7 @@ public class SelectionSystem : MonoBehaviour
         RaycastHit hitInfo;
         Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
 
-        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
+        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity, GetCurrLayerMask()))
         {
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
@@ -170,7 +167,7 @@ public class SelectionSystem : MonoBehaviour
         RaycastHit hitInfo;
         Ray rayOrigin = Camera.main.ScreenPointToRay(MousePos);
 
-        if(Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity))
+        if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity, GetCurrLayerMask()))
         {
             // Add hit object to list
             if (hitInfo.collider.gameObject != null)
@@ -182,6 +179,18 @@ public class SelectionSystem : MonoBehaviour
                 }
 
                 selectedObjects.Clear();
+            }
+        }
+    }
+
+    public void TryDeleteSelected()
+    {
+        foreach(GameObject obj in selectedObjects)
+        {
+            IDeletable temp;
+            if (obj.TryGetComponent<IDeletable>(out temp))
+            {
+                temp.Delete();
             }
         }
     }
@@ -218,5 +227,12 @@ public class SelectionSystem : MonoBehaviour
     {
         GameObject newFace = Instantiate(facePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0), parent);
         newFace.GetComponent<Face>().SpawnFace(nodes);
+    }
+
+    LayerMask GetCurrLayerMask()
+    {
+        print($"curr layer mask = {(solutionChecker.transparencyOn ? ~ignoreWhileTransparent : ~ignoreWhileNotTransparent)}");
+        // Decide if we can raycast through faces
+        return solutionChecker.transparencyOn ? ~ignoreWhileTransparent : ~ignoreWhileNotTransparent;
     }
 }

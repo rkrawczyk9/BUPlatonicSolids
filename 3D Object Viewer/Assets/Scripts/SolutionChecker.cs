@@ -6,7 +6,7 @@ public class SolutionChecker : MonoBehaviour
 {
     [SerializeField] UIManager uiManager;
 
-    bool _transparencyOn = true; // must be opposite of starting value as 'isTransparent' in Face.cs
+    bool _transparencyOn = false; // must be same as starting value as 'isTransparent' in Face.cs
     public bool transparencyOn => _transparencyOn; // getter
 
     private List<Face> faces;

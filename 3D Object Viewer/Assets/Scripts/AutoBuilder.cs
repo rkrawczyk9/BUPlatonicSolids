@@ -30,7 +30,7 @@ public class AutoBuilder : MonoBehaviour
     public void Build600Cell()
     {
         GameObject root = new GameObject();
-        root.name = "Built 600-Cell";
+        root.name = "600-Cell";
         roots_600cell.Add(root);
         BuildFromFile("600CellVertexCoordinates", "600CellFacesMadeWithCoordinates", root.transform, sizeFactor, fourthDimSizeOffset, fourthDimSizeFactor);
     }
@@ -39,27 +39,32 @@ public class AutoBuilder : MonoBehaviour
     public void BuildHypercube()
     {
         GameObject root = new GameObject();
-        root.name = "Built Hypercube";
+        root.name = "Hypercube";
         roots_hypercube.Add(root);
         BuildFromFile("hypercube coordinates", "hypercube faces", root.transform, sizeFactor, fourthDimSizeOffset, fourthDimSizeFactor);
     }
 
     public void DeleteHypercubes()
     {
-        DeleteRoots(roots_hypercube);
+        DeleteRoots(roots_hypercube, out roots_hypercube);
     }
 
     public void Delete600Cells()
     {
-        DeleteRoots(roots_600cell);
+        DeleteRoots(roots_600cell, out roots_600cell);
     }
 
-    void DeleteRoots(List<GameObject> roots)
+    void DeleteRoots(List<GameObject> roots, out List<GameObject> rootsOut)
     {
         foreach(GameObject root in roots)
         {
+            foreach(IDeletable obj in root.transform.GetComponentsInChildren<IDeletable>())
+            {
+                obj.Delete();
+            }
             Destroy(root);
         }
+        rootsOut = new List<GameObject>();
     }
 
     public void BuildFromFile(string points, string faces, Transform parent=null, float sizeFactor=10, float fourthDimSizeOffset=1,float fourthDimSizeFactor=1)
@@ -118,6 +123,8 @@ public class AutoBuilder : MonoBehaviour
             node.id = nextId;
             nodes[nextId] = node;
         }
+        // Reset spawn target position
+        spawnTarget.transform.position = Vector3.zero;
 
         // Reading faces
         foreach (string line in lines_faces)
